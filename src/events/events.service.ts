@@ -197,7 +197,7 @@ export class EventsService {
     eventId: string,
     createSeatRequestDto: CreateSeatRequestDto,
   ): Promise<CommonResponse<CreateSeatResponseDto>> {
-    const { cx, cy, area, row, number } = createSeatRequestDto;
+    const { cx, cy, r, area, row, number } = createSeatRequestDto;
 
     const event = await this.eventRepository.findOne({
       where: { id: eventId },
@@ -211,6 +211,7 @@ export class EventsService {
     const seat = this.seatRepository.create({
       cx,
       cy,
+      r,
       area,
       row,
       number,
@@ -244,6 +245,7 @@ export class EventsService {
         'seat.id',
         'seat.cx',
         'seat.cy',
+        'seat.r',
         'seat.area',
         'seat.row',
         'seat.number',
@@ -266,6 +268,7 @@ export class EventsService {
         'seat.id',
         'seat.cx',
         'seat.cy',
+        'seat.r',
         'seat.area',
         'seat.row',
         'seat.number',
@@ -298,7 +301,7 @@ export class EventsService {
     seatId: string,
     UpdateSeatRequestDto: UpdateSeatRequestDto,
   ): Promise<CommonResponse<UpdateSeatResponseDto>> {
-    const { cx, cy, area, row, number } = UpdateSeatRequestDto;
+    const { cx, cy, r, area, row, number } = UpdateSeatRequestDto;
 
     const event = await this.eventRepository.findOne({
       where: { id: eventId },
@@ -321,6 +324,7 @@ export class EventsService {
 
     seat.cx = cx;
     seat.cy = cy;
+    seat.r = r;
     seat.area = area;
     seat.row = row;
     seat.number = number;
@@ -360,6 +364,7 @@ export class EventsService {
         'seat.id',
         'seat.cx',
         'seat.cy',
+        'seat.r',
         'seat.area',
         'seat.row',
         'seat.number',
@@ -399,6 +404,7 @@ export class EventsService {
         'seat.id',
         'seat.cx',
         'seat.cy',
+        'seat.r',
         'seat.area',
         'seat.row',
         'seat.number',

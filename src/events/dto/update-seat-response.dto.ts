@@ -8,12 +8,14 @@ export class UpdateSeatResponseDto {
 
   @Expose()
   cx: number;
-
   @Expose()
   cy: number;
 
   @Expose()
-  area: number;
+  r: number;
+
+  @Expose()
+  area: string;
 
   @Expose()
   row: number;
