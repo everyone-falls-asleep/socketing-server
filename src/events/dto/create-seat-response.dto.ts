@@ -17,7 +17,11 @@ export class CreateSeatResponseDto {
 
   @Expose()
   @IsInt()
-  area: number;
+  r: number;
+
+  @Expose()
+  @IsString()
+  area: string;
 
   @Expose()
   @IsInt()

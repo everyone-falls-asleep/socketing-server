@@ -1,4 +1,4 @@
-import { IsInt } from 'class-validator';
+import { IsInt, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateSeatRequestDto {
@@ -17,11 +17,18 @@ export class UpdateSeatRequestDto {
   cy: number;
 
   @ApiProperty({
-    description: 'The area identifier for the seat',
+    description: 'The radius of the seat',
     example: 1,
   })
   @IsInt()
-  area: number;
+  r: number;
+
+  @ApiProperty({
+    description: 'The area identifier for the seat',
+    example: 'A',
+  })
+  @IsString()
+  area: string;
 
   @ApiProperty({
     description: 'The row number where the seat is located',

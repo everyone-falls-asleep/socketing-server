@@ -13,7 +13,10 @@ export class SeatDto {
   cy: number;
 
   @Expose({ groups: ['basic', 'detailed'] })
-  area: number;
+  r: number;
+
+  @Expose({ groups: ['basic', 'detailed'] })
+  area: string;
 
   @Expose({ groups: ['basic', 'detailed'] })
   row: number;

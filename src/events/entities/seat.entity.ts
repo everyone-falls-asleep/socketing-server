@@ -30,7 +30,11 @@ export class Seat {
 
   @Expose()
   @Column({ type: 'int' })
-  area: number;
+  r: number;
+
+  @Expose()
+  @Column()
+  area: string;
 
   @Expose()
   @Column({ type: 'int' })

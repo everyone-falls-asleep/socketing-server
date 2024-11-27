@@ -13,7 +13,10 @@ export class UpdateSeatResponseDto {
   cy: number;
 
   @Expose()
-  area: number;
+  r: number;
+
+  @Expose()
+  area: string;
 
   @Expose()
   row: number;
