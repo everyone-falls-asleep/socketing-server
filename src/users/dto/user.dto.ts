@@ -1,4 +1,5 @@
 import { Expose, Type } from 'class-transformer';
+import { PaymentDto } from 'src/reservations/dto/payment.dto';
 import { ReservationDto } from 'src/reservations/dto/reservation.dto';
 
 export class UserDto {
@@ -24,8 +25,8 @@ export class UserDto {
   salt: string;
 
   @Expose({ groups: ['basic', 'detailed'] })
-  @Type(() => ReservationDto)
-  reservations: ReservationDto[];
+  @Type(() => PaymentDto)
+  payments: PaymentDto[];
 
   @Expose({ groups: ['detailed'] })
   createdAt: Date;

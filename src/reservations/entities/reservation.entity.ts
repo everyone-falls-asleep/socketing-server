@@ -17,12 +17,6 @@ export class Reservation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, (user) => user.reservations, {
-    onDelete: 'CASCADE',
-    nullable: false,
-  })
-  user: User;
-
   @ManyToOne(() => Seat, (seat) => seat.reservations, {
     onDelete: 'CASCADE',
     nullable: false,

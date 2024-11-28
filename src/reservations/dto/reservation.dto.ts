@@ -8,10 +8,6 @@ export class ReservationDto {
   id: string;
 
   @Expose({ groups: ['basic', 'detailed'] })
-  @Type(() => UserDto)
-  user: UserDto;
-
-  @Expose({ groups: ['basic', 'detailed'] })
   @Type(() => EventDateDto)
   eventDate: EventDateDto;
 
