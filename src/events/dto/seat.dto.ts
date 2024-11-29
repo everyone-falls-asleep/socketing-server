@@ -22,6 +22,9 @@ export class SeatDto {
   number: number;
 
   @Expose({ groups: ['basic', 'detailed'] })
+  price: number;
+
+  @Expose({ groups: ['basic', 'detailed'] })
   @Type(() => EventDto)
   event: EventDto;
 

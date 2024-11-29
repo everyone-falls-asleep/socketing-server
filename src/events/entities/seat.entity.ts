@@ -40,6 +40,10 @@ export class Seat {
   @Column({ type: 'int' })
   number: number;
 
+  @Expose()
+  @Column('int', { default: 0 })
+  price: number;
+
   @ManyToOne(() => Event, (event) => event.eventDates, {
     onDelete: 'CASCADE',
     nullable: false,

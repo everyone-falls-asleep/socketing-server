@@ -41,4 +41,12 @@ export class CreateSeatRequestDto {
   })
   @IsInt()
   number: number;
+
+  @ApiProperty({
+    description: 'Price of the seat',
+    example: 77000,
+    type: Number,
+  })
+  @IsInt()
+  price: number;
 }
