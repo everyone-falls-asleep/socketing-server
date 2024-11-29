@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Seat } from 'src/events/entities/seat.entity';
 import { EventDate } from 'src/events/entities/event-date.entity';
 import { Reservation } from './entities/reservation.entity';
-import { EventDateDto } from 'src/events/dto/event-date-dto';
-import { SeatDto } from 'src/events/dto/seat.dto';
 import { In, Not, Repository } from 'typeorm';
 import { SeatStatus } from 'src/common/enum/seat-status';
 import { CustomException } from 'src/exceptions/custom-exception';
@@ -34,30 +32,30 @@ export class ReservationValidatorService {
     return eventDate;
   }
 
-  async validateSeats(seatIds: string[], eventDate: EventDateDto) {
-    const seats = await this.seatRepository.find({
-      where: {
-        id: In(seatIds),
-        event: { id: eventDate.event.id },
-      },
-    });
-
-    if (seats.length !== seatIds.length) {
-      const foundIds = seats.map((seat) => seat.id);
-      const missingIds = seatIds.filter((id) => !foundIds.includes(id));
-
-      const error = ERROR_CODES.SEAT_NOT_FOUND;
-      throw new CustomException(
-        error.code,
-        `${error.message}: ${missingIds.join(', ')}`,
-        error.httpStatus,
-      );
-    }
-
-    return seats;
+  async validateSeats(seatIds: string[], eventDate: EventDate) {
+      const seats = await this.seatRepository.find({
+        where: {
+          id: In(seatIds),
+          event: { id: eventDate.event.id },
+        },
+      });
+  
+      if (seats.length !== seatIds.length) {
+        const foundIds = seats.map((seat) => seat.id);
+        const missingIds = seatIds.filter((id) => !foundIds.includes(id));
+  
+        const error = ERROR_CODES.SEAT_NOT_FOUND;
+        throw new CustomException(
+          error.code,
+          `${error.message}: ${missingIds.join(', ')}`,
+          error.httpStatus,
+        );
+      }
+  
+      return seats;
   }
 
-  async checkSeatAvailability(seats: SeatDto[], eventDate: EventDateDto) {
+  async checkSeatAvailability(seats: Seat[], eventDate: EventDate) {
     const existingReservations = await this.reservationRepository.find({
       where: {
         eventDate: { id: eventDate.id },
