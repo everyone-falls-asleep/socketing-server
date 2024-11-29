@@ -246,7 +246,6 @@ export class EventsService {
         'seat.cx',
         'seat.cy',
         'seat.area',
-        'seat.row',
         'seat.number',
         'seat.price',
         'seat.createdAt',

@@ -29,7 +29,7 @@ export class Seat {
   cy: number;
 
   @Expose()
-  @Column({ type: 'int' })
+  @Column()
   area: number;
 
   @Expose()

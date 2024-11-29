@@ -44,38 +44,57 @@ export class ReservationsController {
         code: 0,
         message: 'Success',
         data: {
-          id: '04152d18-2983-4e9e-bd34-7044ca0624c3',
-          user: {
-            id: 'f55235ae-4496-4982-9b0d-24ec3a61d438',
-            nickname: 'new_nickname',
-            email: 'se1620236@naver.com',
-            profileImage: null,
-          },
-          eventDate: {
-            id: '016d3b2c-31b3-408a-a8df-a77b8777b0a3',
-            date: '2024-12-01T19:00:00.000Z',
-            event: {
-              id: 'ba1cdf2b-69ec-473f-a501-47a7b1e73602',
-              title: 'Music Festival',
-              thumbnail: 'https://example.com/thumbnail.jpg',
-              place: 'Central Park',
-              cast: 'Famous Band',
-              ageLimit: 18,
+          payment: {
+            id: 'payment123',
+            user: {
+              id: 'user456',
+              name: 'John Doe',
+              email: 'john.doe@example.com',
+              profileImage: null,
+              role: 'user',
             },
-            createdAt: '2024-11-14T23:22:01.274Z',
-            updatedAt: '2024-11-14T23:22:01.274Z',
+            paymentAmount: 150.0,
+            paymentMethod: 'CREDIT_CARD',
+            paymentStatus: 'PENDING',
+            paidAt: '2024-11-29T14:00:00Z',
+            createdAt: '2024-11-28T12:00:00Z',
           },
-          seat: {
-            id: '5b54820d-d6b8-4eea-840f-f191881198ac',
-            cx: 100,
-            cy: 100,
-            area: 1,
-            row: 1,
-            number: 3,
-            price: 77000,
-          },
-          createdAt: '2024-11-16T09:28:00.874Z',
-          updatedAt: '2024-11-16T09:28:00.874Z',
+          reservations: [
+            {
+              id: 'reservation789',
+              eventDate: {
+                id: 'eventDate123',
+                date: '2024-12-05',
+              },
+              seat: {
+                id: 'seat123',
+                seatNumber: 'A1',
+                row: 'A',
+                section: 'VIP',
+              },
+              seatStatus: 'RESERVED',
+              createdAt: '2024-11-28T12:00:00Z',
+              updatedAt: '2024-11-29T12:00:00Z',
+            },
+            {
+              id: 'reservation790',
+              eventDate: {
+                id: 'eventDate123',
+                date: '2024-12-05',
+                startTime: '18:00',
+                endTime: '20:00',
+              },
+              seat: {
+                id: 'seat124',
+                seatNumber: 'A2',
+                row: 'A',
+                section: 'VIP',
+              },
+              seatStatus: 'RESERVED',
+              createdAt: '2024-11-28T12:00:00Z',
+              updatedAt: '2024-11-29T12:00:00Z',
+            },
+          ],
         },
       },
     },
@@ -113,7 +132,7 @@ export class ReservationsController {
     @Req() req,
   ): Promise<CommonResponse<CreateReservationResponseDto>> {
     const { userId } = req.user;
-    return this.reservationService.createReservation(
+    return this.reservationService.createReservationWithPayment(
       createReservationRequestDto,
       userId,
     );
@@ -144,6 +163,7 @@ export class ReservationsController {
             id: '414114a0-7c18-4a98-bdad-31f8a186fa28',
             createdAt: '2024-11-17T18:16:30.304Z',
             updatedAt: '2024-11-17T18:16:30.304Z',
+            seatStatus: 'reserved',
             user: {
               id: 'f55235ae-4496-4982-9b0d-24ec3a61d438',
               nickname: 'new_nickname',
@@ -177,6 +197,7 @@ export class ReservationsController {
             id: 'fc9409f1-bbc9-44d1-8f53-e00d4964e9d2',
             createdAt: '2024-11-17T18:31:05.888Z',
             updatedAt: '2024-11-17T18:31:05.888Z',
+            seatStatus: 'reserved',
             user: {
               id: 'f55235ae-4496-4982-9b0d-24ec3a61d438',
               nickname: 'new_nickname',
@@ -237,9 +258,9 @@ export class ReservationsController {
   findAll(
     @Query() findAllReservationRequestDto: FindAllReservationRequestDto,
     @Req() req,
-  ): Promise<CommonResponse<FindAllReservationResponseDto[]>> {
+  ): Promise<CommonResponse<FindAllReservationResponseDto>> {
     const { userId } = req.user;
-    return this.reservationService.findAllReservation(
+    return this.reservationService.findAllReservationWithPayment(
       findAllReservationRequestDto,
       userId,
     );

@@ -1,7 +1,9 @@
+import { SeatStatus } from 'src/common/enum/seat-status';
 import { EventDate } from 'src/events/entities/event-date.entity';
 import { Seat } from 'src/events/entities/seat.entity';
-import { User } from 'src/users/entities/user.entity';
+
 import {
+  Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
@@ -10,6 +12,7 @@ import {
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
+import { Payment } from './payment.entity';
 
 @Entity()
 @Unique(['seat', 'eventDate'])
@@ -17,11 +20,11 @@ export class Reservation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, (user) => user.reservations, {
+  @ManyToOne(() => Payment, (payment) => payment.reservations, {
     onDelete: 'CASCADE',
     nullable: false,
   })
-  user: User;
+  payment: Payment;
 
   @ManyToOne(() => Seat, (seat) => seat.reservations, {
     onDelete: 'CASCADE',
@@ -34,6 +37,13 @@ export class Reservation {
     nullable: false,
   })
   eventDate: EventDate;
+
+  @Column({
+    type: 'enum',
+    enum: SeatStatus,
+    default: SeatStatus.AVAILABLE,
+  })
+  seatStatus: SeatStatus;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
