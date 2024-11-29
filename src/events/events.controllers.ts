@@ -420,6 +420,7 @@ export class EventsController {
           area: 1,
           row: 1,
           number: 1,
+          price: 77000,
           event: {
             id: 'ba1cdf2b-69ec-473f-a501-47a7b1e73602',
             title: 'Music Festival',
@@ -528,6 +529,7 @@ export class EventsController {
             area: 1,
             row: 1,
             number: 1,
+            price: 77000,
             createdAt: '2024-11-15T13:19:39.188Z',
             updatedAt: '2024-11-15T13:19:39.188Z',
           },
@@ -538,6 +540,7 @@ export class EventsController {
             area: 1,
             row: 1,
             number: 3,
+            price: 77000,
             createdAt: '2024-11-15T22:35:47.251Z',
             updatedAt: '2024-11-15T22:35:47.251Z',
           },
@@ -580,6 +583,7 @@ export class EventsController {
           area: 1,
           row: 10,
           number: 20,
+          price: 77000,
           createdAt: '2024-11-16T08:00:00.000Z',
           updatedAt: '2024-11-16T08:00:00.000Z',
           event: {
@@ -647,6 +651,7 @@ export class EventsController {
           area: 1,
           row: 1,
           number: 1,
+          price: 77000,
           createdAt: '2024-11-15T13:19:39.188Z',
           updatedAt: '2024-11-16T03:06:27.361Z',
           event: {
@@ -803,6 +808,7 @@ export class EventsController {
             area: 1,
             row: 1,
             number: 3,
+            price: 77000,
             reservations: [
               {
                 id: 'fc9409f1-bbc9-44d1-8f53-e00d4964e9d2',
@@ -897,6 +903,7 @@ export class EventsController {
           area: 1,
           row: 1,
           number: 3,
+          price: 77000,
           reservations: [
             {
               id: 'fc9409f1-bbc9-44d1-8f53-e00d4964e9d2',

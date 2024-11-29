@@ -22,6 +22,9 @@ export class UpdateSeatResponseDto {
   number: number;
 
   @Expose()
+  price: number;
+
+  @Expose()
   @Type(() => EventDto)
   event: EventDto;
 

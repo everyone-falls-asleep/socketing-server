@@ -161,6 +161,7 @@ export class ReservationsService {
         'seat.area',
         'seat.row',
         'seat.number',
+        'seat.price',
         'reservation.createdAt',
         'reservation.updatedAt',
       ])
@@ -203,6 +204,7 @@ export class ReservationsService {
         'seat.area',
         'seat.row',
         'seat.number',
+        'seat.price',
         'reservation.createdAt',
         'reservation.updatedAt',
       ])

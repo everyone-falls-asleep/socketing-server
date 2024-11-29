@@ -28,6 +28,10 @@ export class CreateSeatResponseDto {
   number: number;
 
   @Expose()
+  @IsInt()
+  price: number;
+
+  @Expose()
   @Type(() => EventDto)
   event: EventDto;
 
