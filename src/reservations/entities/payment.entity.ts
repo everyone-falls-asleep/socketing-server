@@ -1,7 +1,8 @@
 import { PaymentMethod } from "src/common/enum/payment-method";
 import { PaymentStatus } from "src/common/enum/payment-status";
 import { User } from "src/users/entities/user.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Reservation } from "./reservation.entity";
 
 @Entity()
 export class Payment {
@@ -11,14 +12,14 @@ export class Payment {
   @ManyToOne(() => User, (user) => user.payments)
   user: User;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', { precision: 10, scale: 2, default: 0 })
   paymentAmount: number;
 
   @Column({
     type: 'enum',
     enum: PaymentMethod,
-    default: PaymentMethod.BANK_TRANSFER,
-  })
+    default: PaymentMethod.NONE,
+  },)
   paymentMethod: PaymentMethod;
 
   @Column({
@@ -28,13 +29,15 @@ export class Payment {
   })
   paymentStatus: PaymentStatus;
 
-  @Column({ type: 'timestamp', nullable: true })
-  paidAt: Date | null;
+  @Column({ type: 'timestamp', nullable: true, default: null })
+  paidAt: Date;
+
+  @OneToMany(() => Reservation, (reservation) => reservation.payment)
+  reservations: Reservation[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
   @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt?: Date;
-
 }
