@@ -41,7 +41,7 @@ export class Reservation {
   @Column({
     type: 'enum',
     enum: SeatStatus,
-    default: SeatStatus.AVAILABLE
+    default: SeatStatus.AVAILABLE,
   })
   seatStatus: SeatStatus;
 

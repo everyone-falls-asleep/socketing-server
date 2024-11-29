@@ -50,10 +50,12 @@ export class ReservationsController {
               id: 'user456',
               name: 'John Doe',
               email: 'john.doe@example.com',
+              profileImage: null,
+              role: 'user',
             },
             paymentAmount: 150.0,
             paymentMethod: 'CREDIT_CARD',
-            paymentStatus: 'COMPLETED',
+            paymentStatus: 'PENDING',
             paidAt: '2024-11-29T14:00:00Z',
             createdAt: '2024-11-28T12:00:00Z',
           },
@@ -63,8 +65,6 @@ export class ReservationsController {
               eventDate: {
                 id: 'eventDate123',
                 date: '2024-12-05',
-                startTime: '18:00',
-                endTime: '20:00',
               },
               seat: {
                 id: 'seat123',
@@ -260,7 +260,7 @@ export class ReservationsController {
     @Req() req,
   ): Promise<CommonResponse<FindAllReservationResponseDto>> {
     const { userId } = req.user;
-    return this.reservationService.findAllReservation(
+    return this.reservationService.findAllReservationsWithPayment(
       findAllReservationRequestDto,
       userId,
     );

@@ -12,5 +12,5 @@ export class CreateReservationResponseDto {
   @ValidateNested()
   @IsNotEmpty()
   @Type(() => PaymentDto)
-  reservations: ReservationDto[]
+  reservations: ReservationDto[];
 }

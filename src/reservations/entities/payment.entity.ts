@@ -1,8 +1,16 @@
-import { PaymentMethod } from "src/common/enum/payment-method";
-import { PaymentStatus } from "src/common/enum/payment-status";
-import { User } from "src/users/entities/user.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Reservation } from "./reservation.entity";
+import { PaymentMethod } from 'src/common/enum/payment-method';
+import { PaymentStatus } from 'src/common/enum/payment-status';
+import { User } from 'src/users/entities/user.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Reservation } from './reservation.entity';
 
 @Entity()
 export class Payment {
@@ -19,7 +27,7 @@ export class Payment {
     type: 'enum',
     enum: PaymentMethod,
     default: PaymentMethod.NONE,
-  },)
+  })
   paymentMethod: PaymentMethod;
 
   @Column({

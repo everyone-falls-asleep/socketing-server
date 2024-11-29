@@ -1,6 +1,5 @@
 import { Expose, Type } from 'class-transformer';
 import { PaymentDto } from 'src/reservations/dto/payment.dto';
-import { ReservationDto } from 'src/reservations/dto/reservation.dto';
 
 export class UserDto {
   @Expose({ groups: ['basic', 'detailed'] })

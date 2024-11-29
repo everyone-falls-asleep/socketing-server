@@ -26,7 +26,6 @@ export class ReservationDto {
   seatStatus: SeatStatus;
 
   @Expose({ groups: ['basic', 'detailed'] })
-
   @Expose({ groups: ['detailed'] })
   createdAt: Date;
 

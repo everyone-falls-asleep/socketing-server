@@ -5,7 +5,7 @@ import { Reservation } from './entities/reservation.entity';
 import { User } from 'src/users/entities/user.entity';
 import { EventDate } from 'src/events/entities/event-date.entity';
 import { Seat } from 'src/events/entities/seat.entity';
-import { DataSource, In, Not, QueryFailedError, Repository } from 'typeorm';
+import { DataSource, QueryFailedError, Repository } from 'typeorm';
 import { ERROR_CODES } from 'src/contants/error-codes';
 import { CustomException } from 'src/exceptions/custom-exception';
 import { plainToInstance } from 'class-transformer';
@@ -110,7 +110,7 @@ export class ReservationsService {
     }
   }
 
-  async findAllReservation(
+  async findAllReservationsWithPayment(
     findAllReservationRequestDto: FindAllReservationRequestDto,
     userId: string,
   ): Promise<CommonResponse<FindAllReservationResponseDto>> {
@@ -173,32 +173,36 @@ export class ReservationsService {
       ])
       .getMany();
 
-      const paymentData = reservationResponseData[0];
-      const reservationData = reservationResponseData;
+    const paymentData = reservationResponseData[0];
+    const reservationData = reservationResponseData;
 
-      const paymentDto = plainToInstance(PaymentDto, paymentData, { excludeExtraneousValues: true });
+    const paymentDto = plainToInstance(PaymentDto, paymentData, {
+      excludeExtraneousValues: true,
+    });
 
-      const reservationDtos = reservationData.map(reservation => {
-        const reservationDto = plainToInstance(ReservationDto, reservation, { excludeExtraneousValues: true });
-        return reservationDto;
+    const reservationDtos = reservationData.map((reservation) => {
+      const reservationDto = plainToInstance(ReservationDto, reservation, {
+        excludeExtraneousValues: true,
       });
-            
-      const reservationResponse = plainToInstance(
-        FindAllReservationResponseDto,
-        { paymentDto, reservationDtos },
-        {
-          groups: ['detailed'],
-          excludeExtraneousValues: true,
-        },
-      );
+      return reservationDto;
+    });
 
-      return new CommonResponse(reservationResponse);
+    const reservationResponse = plainToInstance(
+      FindAllReservationResponseDto,
+      { paymentDto, reservationDtos },
+      {
+        groups: ['detailed'],
+        excludeExtraneousValues: true,
+      },
+    );
+
+    return new CommonResponse(reservationResponse);
   }
 
-  async findOneReservation(
+  async findOneReservationWithPayment(
     reservationId: string,
     userId: string,
-  ): Promise<any> {
+  ): Promise<CommonResponse<CreateReservationResponseDto>> {
     const reservation = await this.reservationRepository
       .createQueryBuilder('reservation')
       .innerJoinAndSelect('reservation.user', 'user')

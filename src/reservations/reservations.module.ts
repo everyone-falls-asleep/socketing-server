@@ -10,9 +10,11 @@ import { Payment } from './entities/payment.entity';
 import { ReservationValidatorService } from './reservation-validator-service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Reservation, Payment, User, Seat, EventDate])],
+  imports: [
+    TypeOrmModule.forFeature([Reservation, Payment, User, Seat, EventDate]),
+  ],
   controllers: [ReservationsController],
-  providers: [ReservationsService, ReservationValidatorService,],
+  providers: [ReservationsService, ReservationValidatorService],
   exports: [ReservationsService, TypeOrmModule],
 })
 export class ReservationsModule {}
