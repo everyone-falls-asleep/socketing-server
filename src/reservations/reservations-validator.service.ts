@@ -35,26 +35,26 @@ export class ReservationValidatorService {
   }
 
   async validateSeats(seatIds: string[], eventDate: EventDateDto) {
-      const seats = await this.seatRepository.find({
-        where: {
-          id: In(seatIds),
-          event: { id: eventDate.event.id },
-        },
-      });
-  
-      if (seats.length !== seatIds.length) {
-        const foundIds = seats.map((seat) => seat.id);
-        const missingIds = seatIds.filter((id) => !foundIds.includes(id));
-  
-        const error = ERROR_CODES.SEAT_NOT_FOUND;
-        throw new CustomException(
-          error.code,
-          `${error.message}: ${missingIds.join(', ')}`,
-          error.httpStatus,
-        );
-      }
-  
-      return seats;
+    const seats = await this.seatRepository.find({
+      where: {
+        id: In(seatIds),
+        event: { id: eventDate.event.id },
+      },
+    });
+
+    if (seats.length !== seatIds.length) {
+      const foundIds = seats.map((seat) => seat.id);
+      const missingIds = seatIds.filter((id) => !foundIds.includes(id));
+
+      const error = ERROR_CODES.SEAT_NOT_FOUND;
+      throw new CustomException(
+        error.code,
+        `${error.message}: ${missingIds.join(', ')}`,
+        error.httpStatus,
+      );
+    }
+
+    return seats;
   }
 
   async checkSeatAvailability(seats: SeatDto[], eventDate: EventDateDto) {

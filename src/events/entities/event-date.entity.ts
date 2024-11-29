@@ -26,7 +26,7 @@ export class EventDate {
   @ManyToOne(() => Event, (event) => event.eventDates, { onDelete: 'CASCADE' })
   event: Event;
 
-  @OneToMany(() => Reservation, (reservation) => reservation.eventDate, {
+  @OneToMany(() => Reservation, (reservation) => reservation.user, {
     cascade: true,
   })
   reservations: Reservation[];

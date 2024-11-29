@@ -51,7 +51,7 @@ export class Event {
   eventDates: EventDate[];
 
   @Expose()
-  @ManyToOne(() => User, (user) => user.events, {
+  @ManyToOne(() => User, (user) => user.reservations, {
     onDelete: 'CASCADE',
     nullable: true,
   })

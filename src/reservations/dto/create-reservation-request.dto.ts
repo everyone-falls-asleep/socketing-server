@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateReservationRequestDto {
   @ApiProperty({
@@ -7,7 +7,6 @@ export class CreateReservationRequestDto {
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
   @IsNotEmpty()
-  @IsString()
   eventId: string;
 
   @ApiProperty({
@@ -15,17 +14,12 @@ export class CreateReservationRequestDto {
     example: '223e4567-e89b-12d3-a456-426614174001',
   })
   @IsNotEmpty()
-  @IsString()
   eventDateId: string;
 
   @ApiProperty({
-    description: 'The list of UUIDs of the seats being reserved',
-    example: [
-      '123e4567-e89b-12d3-a456-426614174000',
-      '223e4567-e89b-12d3-a456-426614174001',
-    ],
+    description: 'The UUID of the seat being reserved',
+    example: '323e4567-e89b-12d3-a456-426614174002',
   })
   @IsNotEmpty()
-  @IsArray()
-  seatIds: string[];
+  seatId: string;
 }
