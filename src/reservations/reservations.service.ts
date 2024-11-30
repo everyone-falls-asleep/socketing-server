@@ -7,18 +7,18 @@ import { DataSource, QueryFailedError, Repository } from 'typeorm';
 import { ERROR_CODES } from 'src/contants/error-codes';
 import { CustomException } from 'src/exceptions/custom-exception';
 import { plainToInstance } from 'class-transformer';
-import { EventDateDto } from 'src/events/dto/event-date-dto';
-import { SeatDto } from 'src/events/dto/seat.dto';
-import { UserDto } from 'src/users/dto/user.dto';
+import { EventDateDto } from 'src/events/dto/basic/event-date-dto';
+import { SeatDto } from 'src/events/dto/basic/seat.dto';
+import { UserDto } from 'src/users/dto/base/user.dto';
 import { Injectable } from '@nestjs/common';
 import { PaymentMethod } from 'src/common/enum/payment-method';
 import { PaymentStatus } from 'src/common/enum/payment-status';
 import { Payment } from './entities/payment.entity';
 import { Reservation } from './entities/reservation.entity';
-import { CreateReservationResponseDto } from './dto/create-reservation-response.dto';
+import { CreateReservationResponseDto } from './dto/response/create-reservation-response.dto';
 import { CreateReservationRequestDto } from './dto/create-reservation-request.dto';
 import { FindAllReservationRequestDto } from './dto/find-all-reservation-request.dto';
-import { FindAllReservationResponseDto } from './dto/find-all-reservation-response.dto';
+import { FindAllReservationResponseDto } from './dto/response/find-all-reservation-response.dto';
 
 @Injectable()
 export class ReservationsService {

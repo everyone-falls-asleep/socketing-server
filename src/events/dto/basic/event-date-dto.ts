@@ -1,11 +1,9 @@
-import { ReservationDto } from 'src/reservations/dto/reservation.dto';
+import { ReservationDto } from 'src/reservations/dto/base/reservation.dto';
 import { EventDto } from './event.dto';
 import { Expose, Type } from 'class-transformer';
+import { BaseDto } from 'src/common/dto/base.dto';
 
-export class EventDateDto {
-  @Expose({ groups: ['basic', 'detailed', 'order'] })
-  id: string;
-
+export class EventDateDto extends BaseDto {
   @Expose({ groups: ['basic', 'detailed', 'order'] })
   date: Date;
 
@@ -16,10 +14,4 @@ export class EventDateDto {
   @Expose({ groups: ['basic', 'detailed'] })
   @Type(() => ReservationDto)
   reservations: ReservationDto[];
-
-  @Expose({ groups: ['detailed'] })
-  createdAt: Date;
-
-  @Expose({ groups: ['detailed'] })
-  updatedAt: Date;
 }

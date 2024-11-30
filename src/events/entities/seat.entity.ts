@@ -1,5 +1,4 @@
 import { Expose } from 'class-transformer';
-import { Event } from 'src/events/entities/event.entity';
 import { Reservation } from 'src/reservations/entities/reservation.entity';
 import {
   Entity,
@@ -12,6 +11,7 @@ import {
   Unique,
   OneToMany,
 } from 'typeorm';
+import { Area } from './area.entity';
 
 @Entity()
 @Unique(['event', 'area', 'row', 'number'])
@@ -28,9 +28,11 @@ export class Seat {
   @Column({ type: 'int' })
   cy: number;
 
-  @Expose()
-  @Column()
-  area: number;
+  @ManyToOne(() => Area, (area) => area.seats, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
+  area: Area;
 
   @Expose()
   @Column({ type: 'int' })
@@ -39,16 +41,6 @@ export class Seat {
   @Expose()
   @Column({ type: 'int' })
   number: number;
-
-  @Expose()
-  @Column('int', { unsigned: true, default: 0 })
-  price: number;
-
-  @ManyToOne(() => Event, (event) => event.eventDates, {
-    onDelete: 'CASCADE',
-    nullable: false,
-  })
-  event: Event;
 
   @OneToMany(() => Reservation, (reservation) => reservation.seat, {
     cascade: true,

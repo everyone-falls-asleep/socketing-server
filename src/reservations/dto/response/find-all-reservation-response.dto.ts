@@ -2,11 +2,11 @@ import { Expose, Type } from 'class-transformer';
 import { IsDate, IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
 import { PaymentMethod } from 'src/common/enum/payment-method';
 import { PaymentStatus } from 'src/common/enum/payment-status';
-import { EventDateDto } from 'src/events/dto/event-date-dto';
-import { SeatDto } from 'src/events/dto/seat.dto';
+import { EventDateDto } from 'src/events/dto/basic/event-date-dto';
+import { SeatDto } from 'src/events/dto/basic/seat.dto';
 import { EventDate } from 'src/events/entities/event-date.entity';
 import { Seat } from 'src/events/entities/seat.entity';
-import { UserDto } from 'src/users/dto/user.dto';
+import { UserDto } from 'src/users/dto/base/user.dto';
 import { User } from 'src/users/entities/user.entity';
 
 export class FindAllReservationResponseDto {

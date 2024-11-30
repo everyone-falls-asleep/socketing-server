@@ -10,9 +10,9 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CommonResponse } from 'src/common/dto/common-response.dto';
-import { UpdateNicknameRequestDto } from './dto/update-nickname-request.dto';
-import { UpdateNicknameResponseDto } from './dto/update-nickname-response.dto';
-import { UpdatePasswordRequestDto } from './dto/update-password-request.dto';
+import { UpdateNicknameRequestDto } from './dto/request/update-nickname-request.dto';
+import { UpdateNicknameResponseDto } from './dto/response/update-nickname-response.dto';
+import { UpdatePasswordRequestDto } from './dto/request/update-password-request.dto';
 import {
   ApiBearerAuth,
   ApiBody,

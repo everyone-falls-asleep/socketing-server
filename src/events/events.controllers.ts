@@ -22,14 +22,14 @@ import {
 } from '@nestjs/swagger';
 import { EventsService } from './events.service';
 import { CommonResponse } from 'src/common/dto/common-response.dto';
-import { CreateEventRequestDto } from './dto/create-event-request.dto';
+import { CreateEventRequestDto } from './dto/request/create-event-request.dto';
 import { CreateEventResponseDto } from './dto/create-event-response.dto';
-import { UpdateEventRequestDto } from './dto/update-event-request.dto';
+import { UpdateEventRequestDto } from './dto/request/update-event-request.dto';
 import { UpdateEventResponseDto } from './dto/update-event-response.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateSeatResponseDto } from './dto/create-seat-response.dto';
-import { CreateSeatRequestDto } from './dto/create-seat-request.dto';
-import { UpdateSeatRequestDto } from './dto/update-seat-request.dto';
+import { CreateSeatRequestDto } from './dto/request/create-seat-request.dto';
+import { UpdateSeatRequestDto } from './dto/request/update-seat-request.dto';
 import { UpdateSeatResponseDto } from './dto/update-seat-response.dto';
 
 @ApiTags('Events')

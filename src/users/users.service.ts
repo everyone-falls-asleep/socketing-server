@@ -6,9 +6,9 @@ import * as crypto from 'node:crypto';
 import { CommonResponse } from 'src/common/dto/common-response.dto';
 import { CustomException } from 'src/exceptions/custom-exception';
 import { ERROR_CODES } from 'src/contants/error-codes';
-import { UpdateNicknameResponseDto } from './dto/update-nickname-response.dto';
-import { UpdateNicknameRequestDto } from './dto/update-nickname-request.dto';
-import { UpdatePasswordRequestDto } from './dto/update-password-request.dto';
+import { UpdateNicknameResponseDto } from './dto/response/update-nickname-response.dto';
+import { UpdateNicknameRequestDto } from './dto/request/update-nickname-request.dto';
+import { UpdatePasswordRequestDto } from './dto/request/update-password-request.dto';
 
 @Injectable()
 export class UsersService {

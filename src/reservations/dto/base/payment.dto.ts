@@ -2,7 +2,7 @@ import { Expose, Type } from 'class-transformer';
 import { IsDate, IsEnum, IsInt, IsOptional } from 'class-validator';
 import { PaymentMethod } from 'src/common/enum/payment-method';
 import { PaymentStatus } from 'src/common/enum/payment-status';
-import { UserDto } from 'src/users/dto/user.dto';
+import { UserDto } from 'src/users/dto/base/user.dto';
 
 export class PaymentDto {
   @Expose({ groups: ['basic', 'detailed'] })

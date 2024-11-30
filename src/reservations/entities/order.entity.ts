@@ -3,10 +3,13 @@ import { User } from 'src/users/entities/user.entity';
 import { Reservation } from './reservation.entity';
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 /* migration) 일단 not null 유지 */
@@ -15,12 +18,6 @@ export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // 양방향 매핑
-  @ManyToOne(() => User, (user) => user.orders, {
-    onDelete: 'CASCADE',
-  })
-  user: User;
-
   @Column({
     type: 'enum',
     enum: OrderStatus,
@@ -28,8 +25,23 @@ export class Order {
   })
   orderStatus: OrderStatus;
 
+  // 양방향 매핑
+  @ManyToOne(() => User, (user) => user.orders, {
+    onDelete: 'CASCADE',
+  })
+  user: User;
+
   @OneToMany(() => Reservation, (reservation) => reservation.order, {
     onDelete: 'CASCADE',
   })
   reservations: Reservation[];
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ type: 'timestamp', nullable: true })
+  deletedAt?: Date;
 }

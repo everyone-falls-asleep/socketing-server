@@ -15,7 +15,7 @@ import {
 import { OrdersService } from './orders.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CommonResponse } from 'src/common/dto/common-response.dto';
-import { CreateOrderRequestDto } from './dto/create-order-request.dto';
+import { CreateOrderRequestDto } from './dto/request/create-order-request.dto';
 import { CreateOrderResponseDto } from './dto/create-order-response.dto';
 
 @ApiTags('Orders')

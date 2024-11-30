@@ -3,8 +3,7 @@ import { Order } from './entities/order.entity';
 import { DataSource, In, QueryFailedError, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommonResponse } from 'src/common/dto/common-response.dto';
-import { CreateOrderRequestDto } from './dto/create-order-request.dto';
-import { CreateOrderResponseDto } from './dto/create-order-response.dto';
+import { CreateOrderRequestDto } from './dto/request/create-order-request.dto';
 import { User } from 'src/users/entities/user.entity';
 import { CustomException } from 'src/exceptions/custom-exception';
 import { ERROR_CODES } from 'src/contants/error-codes';
@@ -13,8 +12,9 @@ import { Reservation } from './entities/reservation.entity';
 import { EventDate } from 'src/events/entities/event-date.entity';
 import { Seat } from 'src/events/entities/seat.entity';
 import { plainToInstance } from 'class-transformer';
-import { ReservationDto } from './dto/reservation.dto';
-import { UserDto } from 'src/users/dto/user.dto';
+import { ReservationDto } from './dto/base/reservation.dto';
+import { UserDto } from 'src/users/dto/base/user.dto';
+import { CreateOrderResponseDto } from './dto/response/create-order-response.dto';
 
 @Injectable()
 export class OrdersService {
@@ -37,8 +37,10 @@ export class OrdersService {
     userId: string,
   ): Promise<CommonResponse<CreateOrderResponseDto>> {
     const { eventId, eventDateId, seatIds } = createOrderRequestDto;
+
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.startTransaction();
+
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
       const error = ERROR_CODES.USER_NOT_FOUND;
@@ -56,6 +58,7 @@ export class OrdersService {
 
     const seats = await this.seatRepository.find({
       where: { id: In(seatIds) },
+      relations: ['area'],
     });
 
     if (seats.length !== seatIds.length) {
@@ -64,6 +67,8 @@ export class OrdersService {
       );
       throw new Error(`Seats not found for IDs: ${missingSeatIds.join(', ')}`);
     }
+
+    const totalAmount = seats.reduce((sum, seat) => sum + seat.area.price, 0);
 
     const newReservations = seats.map((seat) => {
       const reservation = this.reservationRepository.create({
@@ -86,9 +91,11 @@ export class OrdersService {
 
       const orderResponse = plainToInstance(
         CreateOrderResponseDto,
-        savedOrder,
         {
-          groups: ['order'],
+          ...savedOrder,
+          totalAmount: totalAmount,
+        },
+        {
           excludeExtraneousValues: true,
         },
       );
@@ -100,7 +107,6 @@ export class OrdersService {
 
       const reservationResponse = savedReservations.map((reservation) =>
         plainToInstance(ReservationDto, reservation, {
-          groups: ['order'],
           excludeExtraneousValues: true,
         }),
       );

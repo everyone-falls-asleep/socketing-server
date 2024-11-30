@@ -1,23 +1,22 @@
 import { Expose, Type } from 'class-transformer';
 import { EventDateDto } from './event-date-dto';
+import { BaseDto } from 'src/common/dto/base.dto';
 
-export class EventDto {
+export class EventDto extends BaseDto {
   @Expose({ groups: ['basic', 'detailed'] })
-  id: string;
-
-  @Expose({ groups: ['basic', 'detailed', 'order'] })
   title: string;
 
-  @Expose({ groups: ['basic', 'detailed', 'order'] })
+  @Expose({ groups: ['basic', 'detailed'] })
   thumbnail: string;
 
-  @Expose({ groups: ['basic', 'detailed', 'order'] })
+  //
+  @Expose({ groups: ['basic', 'detailed'] })
   place: string;
 
-  @Expose({ groups: ['basic', 'detailed', 'order'] })
+  @Expose({ groups: ['basic', 'detailed'] })
   cast: string;
 
-  @Expose({ groups: ['basic', 'detailed', 'order'] })
+  @Expose({ groups: ['basic', 'detailed'] })
   ageLimit?: number;
 
   @Expose({ groups: ['detailed'] })
@@ -25,14 +24,9 @@ export class EventDto {
 
   @Expose({ groups: ['basic', 'detailed'] })
   ticketingStartTime?: Date;
+  //
 
   @Expose({ groups: ['basic', 'detailed'] })
   @Type(() => EventDateDto)
   eventDates: EventDateDto[];
-
-  @Expose({ groups: ['detailed'] })
-  createdAt: Date;
-
-  @Expose({ groups: ['detailed'] })
-  updatedAt: Date;
 }
