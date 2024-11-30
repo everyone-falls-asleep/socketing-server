@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Seat } from 'src/events/entities/seat.entity';
 import { EventDate } from 'src/events/entities/event-date.entity';
 import { Reservation } from './entities/reservation.entity';
-import { In, Not, Repository } from 'typeorm';
-import { SeatStatus } from 'src/common/enum/seat-status';
+import { In, IsNull, Not, Repository } from 'typeorm';
 import { CustomException } from 'src/exceptions/custom-exception';
 import { ERROR_CODES } from 'src/contants/error-codes';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -60,15 +59,16 @@ export class ReservationValidatorService {
       where: {
         eventDate: { id: eventDate.id },
         seat: { id: In(seats.map((seat) => seat.id)) },
-        seatStatus: Not(SeatStatus.AVAILABLE),
+        deletedAt: IsNull(),
       },
-      select: ['id', 'seatStatus'],
+      select: ['id', 'seat', 'deletedAt'],
+      relations: ['seat'],
     });
 
     if (existingReservations.length > 0) {
       const unavailableSeats = existingReservations.map((r) => ({
         seatId: r.seat.id,
-        status: r.seatStatus,
+        status: 'Reserved'
       }));
 
       const error = ERROR_CODES.EXISTING_RESERVATION;

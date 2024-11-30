@@ -20,11 +20,11 @@ import {
 } from '@nestjs/swagger';
 import { ReservationsService } from './reservations.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { CreateReservationRequestDto } from './dto/create-reservation-request.dto';
 import { CommonResponse } from 'src/common/dto/common-response.dto';
-import { CreateReservationResponseDto } from './dto/create-reservation-response.dto';
 import { FindAllReservationRequestDto } from './dto/find-all-reservation-request.dto';
 import { FindAllReservationResponseDto } from './dto/find-all-reservation-response.dto';
+import { CreateReservationRequestDto } from './dto/create-reservation-request.dto';
+import { CreateReservationResponseDto } from './dto/create-reservation-response.dto';
 
 @ApiTags('Reservations')
 @Controller('reservations')
@@ -72,7 +72,6 @@ export class ReservationsController {
                 row: 'A',
                 section: 'VIP',
               },
-              seatStatus: 'RESERVED',
               createdAt: '2024-11-28T12:00:00Z',
               updatedAt: '2024-11-29T12:00:00Z',
             },
@@ -90,7 +89,6 @@ export class ReservationsController {
                 row: 'A',
                 section: 'VIP',
               },
-              seatStatus: 'RESERVED',
               createdAt: '2024-11-28T12:00:00Z',
               updatedAt: '2024-11-29T12:00:00Z',
             },
@@ -132,7 +130,7 @@ export class ReservationsController {
     @Req() req,
   ): Promise<CommonResponse<CreateReservationResponseDto>> {
     const { userId } = req.user;
-    return this.reservationService.createReservationWithPayment(
+    return this.reservationService.createReservation(
       createReservationRequestDto,
       userId,
     );
@@ -163,7 +161,6 @@ export class ReservationsController {
             id: '414114a0-7c18-4a98-bdad-31f8a186fa28',
             createdAt: '2024-11-17T18:16:30.304Z',
             updatedAt: '2024-11-17T18:16:30.304Z',
-            seatStatus: 'reserved',
             user: {
               id: 'f55235ae-4496-4982-9b0d-24ec3a61d438',
               nickname: 'new_nickname',
@@ -197,7 +194,6 @@ export class ReservationsController {
             id: 'fc9409f1-bbc9-44d1-8f53-e00d4964e9d2',
             createdAt: '2024-11-17T18:31:05.888Z',
             updatedAt: '2024-11-17T18:31:05.888Z',
-            seatStatus: 'reserved',
             user: {
               id: 'f55235ae-4496-4982-9b0d-24ec3a61d438',
               nickname: 'new_nickname',
@@ -258,9 +254,9 @@ export class ReservationsController {
   findAll(
     @Query() findAllReservationRequestDto: FindAllReservationRequestDto,
     @Req() req,
-  ): Promise<CommonResponse<FindAllReservationResponseDto>> {
+  ): Promise<CommonResponse<FindAllReservationResponseDto[]>> {
     const { userId } = req.user;
-    return this.reservationService.findAllReservationWithPayment(
+    return this.reservationService.findAllReservation(
       findAllReservationRequestDto,
       userId,
     );
@@ -357,7 +353,7 @@ export class ReservationsController {
   findOne(
     @Param('reservationId') reservationId: string,
     @Req() req,
-  ): Promise<any> {
+  ): Promise<FindAllReservationResponseDto> {
     const { userId } = req.user;
     return this.reservationService.findOneReservation(reservationId, userId);
   }

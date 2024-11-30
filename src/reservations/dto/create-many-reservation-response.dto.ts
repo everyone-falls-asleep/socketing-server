@@ -1,10 +1,12 @@
 import { Expose, Type } from 'class-transformer';
+import { IsDate, IsString } from 'class-validator';
 import { EventDateDto } from 'src/events/dto/event-date-dto';
 import { SeatDto } from 'src/events/dto/seat.dto';
 import { UserDto } from 'src/users/dto/user.dto';
 
-export class ReservationDto {
+export class CreateManyReservationResponseDto {
   @Expose({ groups: ['basic', 'detailed'] })
+  @IsString()
   id: string;
 
   @Expose({ groups: ['basic', 'detailed'] })
@@ -20,8 +22,10 @@ export class ReservationDto {
   seat: SeatDto;
 
   @Expose({ groups: ['detailed'] })
+  @IsDate()
   createdAt: Date;
 
   @Expose({ groups: ['detailed'] })
+  @IsDate()
   updatedAt: Date;
 }

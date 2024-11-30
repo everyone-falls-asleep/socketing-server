@@ -1,5 +1,7 @@
 import { Expose, Type } from 'class-transformer';
-import { IsDate, IsString } from 'class-validator';
+import { IsDate, IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
+import { PaymentMethod } from 'src/common/enum/payment-method';
+import { PaymentStatus } from 'src/common/enum/payment-status';
 import { EventDateDto } from 'src/events/dto/event-date-dto';
 import { SeatDto } from 'src/events/dto/seat.dto';
 import { EventDate } from 'src/events/entities/event-date.entity';
@@ -9,12 +11,42 @@ import { User } from 'src/users/entities/user.entity';
 
 export class FindAllReservationResponseDto {
   @Expose({ groups: ['basic', 'detailed'] })
+  @IsOptional()
   @IsString()
-  id: string;
+  paymentId?: string | null;
+
+  @Expose({ groups: ['basic', 'detailed'] })
+  @IsOptional()
+  @IsInt()
+  paymentAmount?: number | null;
+
+  @Expose({ groups: ['basic', 'detailed'] })
+  @IsOptional()
+  @IsEnum(PaymentMethod)
+  paymentMethod?: PaymentMethod | null;
+
+  @Expose({ groups: ['basic', 'detailed'] })
+  @IsOptional()
+  @IsEnum(PaymentStatus)
+  paymentStatus?: PaymentStatus | null;
+
+  @Expose({ groups: ['basic', 'detailed'] })
+  @IsOptional()
+  @IsDate()
+  paidAt?: Date | null;
+
+  @Expose({ groups: ['basic', 'detailed'] })
+  @IsOptional()
+  @IsDate()
+  paymentCreatedAt?: Date | null;
 
   @Expose({ groups: ['basic', 'detailed'] })
   @Type(() => User)
   user: UserDto;
+
+  @Expose({ groups: ['basic', 'detailed'] })
+  @IsString()
+  reservationId: string;
 
   @Expose({ groups: ['basic', 'detailed'] })
   @Type(() => EventDate)
@@ -26,7 +58,7 @@ export class FindAllReservationResponseDto {
 
   @Expose({ groups: ['detailed'] })
   @IsDate()
-  createdAt: Date;
+  reservatioinCreatedAt: Date;
 
   @Expose({ groups: ['detailed'] })
   @IsDate()
