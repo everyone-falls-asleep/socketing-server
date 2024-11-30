@@ -26,6 +26,8 @@ export class ReservationsService {
     private readonly dataSource: DataSource,
     @InjectRepository(Payment)
     private readonly paymentRepository: Repository<Payment>,
+    @InjectRepository(Payment)
+    private readonly paymentRepository: Repository<Payment>,
     @InjectRepository(Reservation)
     private readonly reservationRepository: Repository<Reservation>,
     @InjectRepository(User)
@@ -37,9 +39,11 @@ export class ReservationsService {
   ) {}
 
   async createReservation(
+  async createReservation(
     createReservationRequestDto: CreateReservationRequestDto,
     userId: string,
   ): Promise<CommonResponse<CreateReservationResponseDto>> {
+    const { eventId, eventDateId, seatId } = createReservationRequestDto;
     const { eventId, eventDateId, seatId } = createReservationRequestDto;
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.startTransaction();
@@ -78,6 +82,27 @@ export class ReservationsService {
     const newReservation = this.reservationRepository.create({
       eventDate,
       seat,
+    const eventDate = await this.eventDateRepository.findOne({
+      where: { id: eventDateId, event: { id: eventId } },
+      relations: ['event'],
+    });
+    if (!eventDate) {
+      const error = ERROR_CODES.EVENT_DATE_NOT_FOUND;
+      throw new CustomException(error.code, error.message, error.httpStatus);
+    }
+
+    const seat = await this.seatRepository.findOne({
+      where: { id: seatId, event: { id: eventId } },
+      relations: ['event'],
+    });
+    if (!seat) {
+      const error = ERROR_CODES.SEAT_NOT_FOUND;
+      throw new CustomException(error.code, error.message, error.httpStatus);
+    }
+
+    const newReservation = this.reservationRepository.create({
+      eventDate,
+      seat,
     });
 
     try {
@@ -85,9 +110,13 @@ export class ReservationsService {
       newReservation.payment = newPayment;
       const savedReservation =
         await this.reservationRepository.save(newReservation);
+      newReservation.payment = newPayment;
+      const savedReservation =
+        await this.reservationRepository.save(newReservation);
 
       const reservationResponse = plainToInstance(
         CreateReservationResponseDto,
+        savedPayment,
         savedPayment,
         {
           groups: ['detailed'],
@@ -95,6 +124,30 @@ export class ReservationsService {
         },
       );
 
+      reservationResponse.eventDate = plainToInstance(
+        EventDateDto,
+        savedReservation.eventDate,
+        {
+          groups: ['basic'],
+          excludeExtraneousValues: true,
+        },
+      );
+
+      reservationResponse.seat = plainToInstance(
+        SeatDto,
+        savedReservation.seat,
+        {
+          groups: ['basic'],
+          excludeExtraneousValues: true,
+        },
+      );
+
+      reservationResponse.user = plainToInstance(UserDto, savedPayment.user, {
+        groups: ['basic'],
+        excludeExtraneousValues: true,
+      });
+
+      await queryRunner.commitTransaction();
       reservationResponse.eventDate = plainToInstance(
         EventDateDto,
         savedReservation.eventDate,
@@ -137,8 +190,11 @@ export class ReservationsService {
   }
 
   async findAllReservation(
+  async findAllReservation(
     findAllReservationRequestDto: FindAllReservationRequestDto,
     userId: string,
+  ): Promise<CommonResponse<FindAllReservationResponseDto[]>> {
+    const { eventId } = findAllReservationRequestDto;
   ): Promise<CommonResponse<FindAllReservationResponseDto[]>> {
     const { eventId } = findAllReservationRequestDto;
 
@@ -153,17 +209,33 @@ export class ReservationsService {
       .andWhere('paymentUser.id = :userId OR reservationUser.id = :userId', {
         userId,
       });
+      .leftJoinAndSelect('payment.user', 'paymentUser')
+      .leftJoinAndSelect('payment.reservations', 'reservation')
+      .leftJoinAndSelect('reservation.user', 'reservationUser')
+      .leftJoinAndSelect('reservation.eventDate', 'eventDate')
+      .leftJoinAndSelect('eventDate.event', 'event')
+      .leftJoinAndSelect('reservation.seat', 'seat')
+      .andWhere('paymentUser.id = :userId OR reservationUser.id = :userId', {
+        userId,
+      });
     if (eventId) {
       queryBuilder.andWhere('event.id = :eventId', { eventId });
     }
 
     const reservationsData = await queryBuilder
+    const reservationsData = await queryBuilder
       .select([
+        'payment.id AS paymentId',
         'payment.id AS paymentId',
         'payment.paymentAmount',
         'payment.paymentMethod',
         'payment.paymentStatus',
         'payment.paidAt',
+        'payment.createdAt AS paymentCreatedAt',
+        'COALESCE(paymentUser.id, reservationUser.id) AS userId',
+        'COALESCE(paymentUser.nickname, reservationUser.nickname) AS userNickname',
+        'COALESCE(paymentUser.email, reservationUser.email) AS userEmail',
+        'reservation.id AS reservationId',
         'payment.createdAt AS paymentCreatedAt',
         'COALESCE(paymentUser.id, reservationUser.id) AS userId',
         'COALESCE(paymentUser.nickname, reservationUser.nickname) AS userNickname',
@@ -184,6 +256,7 @@ export class ReservationsService {
         'seat.row',
         'seat.number',
         'seat.price',
+        'reservation.createdAt AS reservationCreatedAt',
         'reservation.createdAt AS reservationCreatedAt',
         'reservation.updatedAt',
       ])
@@ -227,6 +300,16 @@ export class ReservationsService {
         'COALESCE(paymentUser.nickname, reservationUser.nickname) AS userNickname',
         'COALESCE(paymentUser.email, reservationUser.email) AS userEmail',
         'reservation.id AS reservationId',
+        'payment.id AS paymentId',
+        'payment.paymentAmount',
+        'payment.paymentMethod',
+        'payment.paymentStatus',
+        'payment.paidAt',
+        'payment.createdAt AS paymentCreatedAt',
+        'COALESCE(paymentUser.id, reservationUser.id) AS userId',
+        'COALESCE(paymentUser.nickname, reservationUser.nickname) AS userNickname',
+        'COALESCE(paymentUser.email, reservationUser.email) AS userEmail',
+        'reservation.id AS reservationId',
         'eventDate.id',
         'eventDate.date',
         'event.id',
@@ -243,10 +326,12 @@ export class ReservationsService {
         'seat.number',
         'seat.price',
         'reservation.createdAt AS reservationCreatedAt',
+        'reservation.createdAt AS reservationCreatedAt',
         'reservation.updatedAt',
       ])
       .getOne();
 
+    if (!reservationData) {
     if (!reservationData) {
       throw new CustomException(
         ERROR_CODES.RESERVATION_NOT_FOUND.code,

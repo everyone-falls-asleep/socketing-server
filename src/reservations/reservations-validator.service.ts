@@ -60,7 +60,10 @@ export class ReservationValidatorService {
         eventDate: { id: eventDate.id },
         seat: { id: In(seats.map((seat) => seat.id)) },
         deletedAt: IsNull(),
+        deletedAt: IsNull(),
       },
+      select: ['id', 'seat', 'deletedAt'],
+      relations: ['seat'],
       select: ['id', 'seat', 'deletedAt'],
       relations: ['seat'],
     });

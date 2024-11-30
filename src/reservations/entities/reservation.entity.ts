@@ -21,6 +21,7 @@ export class Reservation {
   @ManyToOne(() => Order, (order) => order.reservations, {
     onDelete: 'CASCADE',
     nullable: true,
+    nullable: true,
   })
   order: Order | null;
 

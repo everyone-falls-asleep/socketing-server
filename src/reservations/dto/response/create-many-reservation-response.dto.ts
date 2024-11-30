@@ -6,8 +6,34 @@ import { UserDto } from 'src/users/dto/base/user.dto';
 
 export class CreateManyReservationResponseDto {
   @Expose({ groups: ['basic', 'detailed'] })
+  @IsOptional()
   @IsString()
-  id: string;
+  paymentId?: string | null;
+
+  @Expose({ groups: ['basic', 'detailed'] })
+  @IsOptional()
+  @IsInt()
+  paymentAmount?: number | null;
+
+  @Expose({ groups: ['basic', 'detailed'] })
+  @IsOptional()
+  @IsEnum(PaymentMethod)
+  paymentMethod?: PaymentMethod | null;
+
+  @Expose({ groups: ['basic', 'detailed'] })
+  @IsOptional()
+  @IsEnum(PaymentStatus)
+  paymentStatus?: PaymentStatus | null;
+
+  @Expose({ groups: ['basic', 'detailed'] })
+  @IsOptional()
+  @IsDate()
+  paidAt?: Date | null;
+
+  @Expose({ groups: ['basic', 'detailed'] })
+  @IsOptional()
+  @IsDate()
+  paymentCreatedAt?: Date | null;
 
   @Expose({ groups: ['basic', 'detailed'] })
   @Type(() => UserDto)
@@ -23,7 +49,7 @@ export class CreateManyReservationResponseDto {
 
   @Expose({ groups: ['detailed'] })
   @IsDate()
-  createdAt: Date;
+  reservatioinCreatedAt: Date;
 
   @Expose({ groups: ['detailed'] })
   @IsDate()

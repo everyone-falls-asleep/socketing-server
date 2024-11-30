@@ -126,6 +126,7 @@ export class ReservationsController {
   ): Promise<CommonResponse<CreateReservationResponseDto>> {
     const { userId } = req.user;
     return this.reservationService.createReservation(
+    return this.reservationService.createReservation(
       createReservationRequestDto,
       userId,
     );
@@ -250,7 +251,9 @@ export class ReservationsController {
     @Query() findAllReservationRequestDto: FindAllReservationRequestDto,
     @Req() req,
   ): Promise<CommonResponse<FindAllReservationResponseDto[]>> {
+  ): Promise<CommonResponse<FindAllReservationResponseDto[]>> {
     const { userId } = req.user;
+    return this.reservationService.findAllReservation(
     return this.reservationService.findAllReservation(
       findAllReservationRequestDto,
       userId,
@@ -348,6 +351,7 @@ export class ReservationsController {
   findOne(
     @Param('reservationId') reservationId: string,
     @Req() req,
+  ): Promise<FindAllReservationResponseDto> {
   ): Promise<FindAllReservationResponseDto> {
     const { userId } = req.user;
     return this.reservationService.findOneReservation(reservationId, userId);
