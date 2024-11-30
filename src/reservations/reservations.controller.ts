@@ -18,14 +18,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ReservationsService } from './reservations.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CommonResponse } from 'src/common/dto/common-response.dto';
-import { FindAllReservationRequestDto } from './dto/find-all-reservation-request.dto';
-import { FindAllReservationResponseDto } from './dto/find-all-reservation-response.dto';
-import { CreateReservationRequestDto } from './dto/create-reservation-request.dto';
-import { CreateReservationResponseDto } from './dto/create-reservation-response.dto';
-
+import { ReservationsService } from './reservations.service';
 @ApiTags('Reservations')
 @Controller('reservations')
 export class ReservationsController {

@@ -3,13 +3,13 @@ import { EventDto } from './event.dto';
 import { Expose, Type } from 'class-transformer';
 
 export class EventDateDto {
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose({ groups: ['basic', 'detailed', 'order'] })
   id: string;
 
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose({ groups: ['basic', 'detailed', 'order'] })
   date: Date;
 
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose({ groups: ['basic', 'detailed', 'order'] })
   @Type(() => EventDto)
   event: EventDto;
 

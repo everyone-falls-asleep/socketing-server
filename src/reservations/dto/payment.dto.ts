@@ -17,11 +17,11 @@ export class PaymentDto {
   paymentAmount: number;
 
   @Expose({ groups: ['basic', 'detailed'] })
-  @IsEnum(PaymentMethod, { message: 'Invalid payment method' })
+  @IsEnum(PaymentMethod)
   paymentMethod: PaymentMethod;
 
   @Expose({ groups: ['basic', 'detailed'] })
-  @IsEnum(PaymentStatus, { message: 'Invalid payment status' })
+  @IsEnum(PaymentStatus)
   paymentStatus: PaymentStatus;
 
   @Expose({ groups: ['basic', 'detailed'] })

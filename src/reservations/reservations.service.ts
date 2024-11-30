@@ -1,6 +1,5 @@
 import { CommonResponse } from 'src/common/dto/common-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Reservation } from './entities/reservation.entity';
 import { User } from 'src/users/entities/user.entity';
 import { EventDate } from 'src/events/entities/event-date.entity';
 import { Seat } from 'src/events/entities/seat.entity';
@@ -11,14 +10,15 @@ import { plainToInstance } from 'class-transformer';
 import { EventDateDto } from 'src/events/dto/event-date-dto';
 import { SeatDto } from 'src/events/dto/seat.dto';
 import { UserDto } from 'src/users/dto/user.dto';
-import { FindAllReservationRequestDto } from './dto/find-all-reservation-request.dto';
-import { FindAllReservationResponseDto } from './dto/find-all-reservation-response.dto';
 import { Injectable } from '@nestjs/common';
-import { CreateReservationRequestDto } from './dto/create-reservation-request.dto';
-import { CreateReservationResponseDto } from './dto/create-reservation-response.dto';
-import { Payment } from './entities/payment.entity';
 import { PaymentMethod } from 'src/common/enum/payment-method';
 import { PaymentStatus } from 'src/common/enum/payment-status';
+import { Payment } from './entities/payment.entity';
+import { Reservation } from './entities/reservation.entity';
+import { CreateReservationResponseDto } from './dto/create-reservation-response.dto';
+import { CreateReservationRequestDto } from './dto/create-reservation-request.dto';
+import { FindAllReservationRequestDto } from './dto/find-all-reservation-request.dto';
+import { FindAllReservationResponseDto } from './dto/find-all-reservation-response.dto';
 
 @Injectable()
 export class ReservationsService {
@@ -53,7 +53,7 @@ export class ReservationsService {
       user,
       paymentAmount: 0,
       paymentMethod: PaymentMethod.NONE,
-      paymentStatus: PaymentStatus.Ready,
+      paymentStatus: PaymentStatus.READY,
       paidAt: null,
     });
 

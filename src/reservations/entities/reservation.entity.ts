@@ -10,7 +10,7 @@ import {
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
-import { Payment } from './payment.entity';
+import { Order } from './order.entity';
 
 @Entity()
 @Unique(['seat', 'eventDate'])
@@ -18,11 +18,11 @@ export class Reservation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Payment, (payment) => payment.reservations, {
+  @ManyToOne(() => Order, (order) => order.reservations, {
     onDelete: 'CASCADE',
     nullable: true,
   })
-  payment: Payment | null;
+  order: Order | null;
 
   @ManyToOne(() => Seat, (seat) => seat.reservations, {
     onDelete: 'CASCADE',

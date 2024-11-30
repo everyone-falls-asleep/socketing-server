@@ -5,19 +5,19 @@ export class EventDto {
   @Expose({ groups: ['basic', 'detailed'] })
   id: string;
 
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose({ groups: ['basic', 'detailed', 'order'] })
   title: string;
 
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose({ groups: ['basic', 'detailed', 'order'] })
   thumbnail: string;
 
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose({ groups: ['basic', 'detailed', 'order'] })
   place: string;
 
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose({ groups: ['basic', 'detailed', 'order'] })
   cast: string;
 
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose({ groups: ['basic', 'detailed', 'order'] })
   ageLimit?: number;
 
   @Expose({ groups: ['detailed'] })
