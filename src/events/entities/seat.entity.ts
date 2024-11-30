@@ -41,7 +41,7 @@ export class Seat {
   number: number;
 
   @Expose()
-  @Column('int', { default: 0 })
+  @Column('int', { unsigned: true, default: 0 })
   price: number;
 
   @ManyToOne(() => Event, (event) => event.eventDates, {
