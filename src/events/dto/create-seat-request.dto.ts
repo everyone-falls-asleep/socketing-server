@@ -1,5 +1,6 @@
-import { IsInt } from 'class-validator';
+import { IsInt, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 
 export class CreateSeatRequestDto {
   @ApiProperty({
@@ -47,6 +48,7 @@ export class CreateSeatRequestDto {
     example: 77000,
     type: Number,
   })
+  @IsOptional() /* After migration, remove it */
   @IsInt()
-  price: number;
+  price?: number;
 }
