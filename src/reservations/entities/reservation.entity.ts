@@ -1,9 +1,7 @@
-import { SeatStatus } from 'src/common/enum/seat-status';
 import { EventDate } from 'src/events/entities/event-date.entity';
 import { Seat } from 'src/events/entities/seat.entity';
 
 import {
-  Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
@@ -22,9 +20,9 @@ export class Reservation {
 
   @ManyToOne(() => Payment, (payment) => payment.reservations, {
     onDelete: 'CASCADE',
-    nullable: false,
+    nullable: true,
   })
-  payment: Payment;
+  payment: Payment | null;
 
   @ManyToOne(() => Seat, (seat) => seat.reservations, {
     onDelete: 'CASCADE',
@@ -37,13 +35,6 @@ export class Reservation {
     nullable: false,
   })
   eventDate: EventDate;
-
-  @Column({
-    type: 'enum',
-    enum: SeatStatus,
-    default: SeatStatus.AVAILABLE,
-  })
-  seatStatus: SeatStatus;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

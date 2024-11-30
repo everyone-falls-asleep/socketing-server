@@ -4,7 +4,7 @@ import { EventDateDto } from 'src/events/dto/event-date-dto';
 import { SeatDto } from 'src/events/dto/seat.dto';
 import { UserDto } from 'src/users/dto/user.dto';
 
-export class CreateReservationResponseDto {
+export class CreateManyReservationResponseDto {
   @Expose({ groups: ['basic', 'detailed'] })
   @IsString()
   id: string;
@@ -28,8 +28,4 @@ export class CreateReservationResponseDto {
   @Expose({ groups: ['detailed'] })
   @IsDate()
   updatedAt: Date;
-
-  @Expose({ groups: ['detailed'] })
-  @IsDate()
-  deletedAt: Date;
 }

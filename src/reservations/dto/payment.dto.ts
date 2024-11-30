@@ -1,12 +1,5 @@
 import { Expose, Type } from 'class-transformer';
-import {
-  IsDate,
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  Max,
-  Min,
-} from 'class-validator';
+import { IsDate, IsEnum, IsInt, IsOptional } from 'class-validator';
 import { PaymentMethod } from 'src/common/enum/payment-method';
 import { PaymentStatus } from 'src/common/enum/payment-status';
 import { UserDto } from 'src/users/dto/user.dto';
@@ -20,14 +13,7 @@ export class PaymentDto {
   user: UserDto;
 
   @Expose({ groups: ['basic', 'detailed'] })
-  @IsNumber(
-    { allowNaN: false, allowInfinity: false },
-    { message: 'Payment amount must be a valid number' },
-  )
-  @Min(0, { message: 'Payment amount must be greater than or equal to 0' })
-  @Max(99999999.99, {
-    message: 'Payment amount exceeds the maximum allowed value',
-  })
+  @IsInt()
   paymentAmount: number;
 
   @Expose({ groups: ['basic', 'detailed'] })
