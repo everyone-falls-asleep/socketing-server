@@ -1,7 +1,7 @@
 import { Expose } from 'class-transformer';
 import { Event } from 'src/events/entities/event.entity';
 import { Payment } from 'src/reservations/entities/payment.entity';
-import { Reservation } from 'src/reservations/entities/reservation.entity';
+
 import {
   Entity,
   Column,

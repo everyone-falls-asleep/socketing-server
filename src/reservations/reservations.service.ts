@@ -5,7 +5,7 @@ import { Reservation } from './entities/reservation.entity';
 import { User } from 'src/users/entities/user.entity';
 import { EventDate } from 'src/events/entities/event-date.entity';
 import { Seat } from 'src/events/entities/seat.entity';
-import { DataSource, In, Not, QueryFailedError, Repository } from 'typeorm';
+import { DataSource, QueryFailedError, Repository } from 'typeorm';
 import { ERROR_CODES } from 'src/contants/error-codes';
 import { CustomException } from 'src/exceptions/custom-exception';
 import { plainToInstance } from 'class-transformer';
