@@ -35,49 +35,49 @@ export class OrdersController {
         code: 0,
         message: 'Success',
         data: {
-          "id": "550e8400-e29b-41d4-a716-446655440000",
-          "createdAt": "2024-12-01T09:00:00.000Z",
-          "updatedAt": "2024-12-01T09:00:00.000Z",
-          "user": {
-            "id": "7a1b5400-e29b-41d4-a716-446655440001",
-            "nickname": "John Doe",
-            "email": "john@example.com",
-            "profileImage": "https://example.com/profile/john.jpg",
-            "role": "user"
+          id: '550e8400-e29b-41d4-a716-446655440000',
+          createdAt: '2024-12-01T09:00:00.000Z',
+          updatedAt: '2024-12-01T09:00:00.000Z',
+          user: {
+            id: '7a1b5400-e29b-41d4-a716-446655440001',
+            nickname: 'John Doe',
+            email: 'john@example.com',
+            profileImage: 'https://example.com/profile/john.jpg',
+            role: 'user',
           },
-          "orderStatus": "pending",
-          "totalAmount": 150000,
-          "reservations": [
+          orderStatus: 'pending',
+          totalAmount: 150000,
+          reservations: [
             {
-              "id": "9c4e8400-e29b-41d4-a716-446655440002",
-              "eventDate": {
-                "id": "8b3d8400-e29b-41d4-a716-446655440003",
-                "date": "2024-12-25T19:30:00.000Z",
-                "event": {
-                  "id": "6f2c8400-e29b-41d4-a716-446655440004",
-                  "title": "The Phantom of the Opera",
-                  "thumbnail": "https://example.com/events/phantom.jpg",
-                  "place": "Seoul Arts Center",
-                  "cast": "Kim Min-ji, Lee Jung-ho",
-                  "ageLimit": 12,
-                  "ticketingStartTime": "2024-11-01T10:00:00.000Z"
-                }
+              id: '9c4e8400-e29b-41d4-a716-446655440002',
+              eventDate: {
+                id: '8b3d8400-e29b-41d4-a716-446655440003',
+                date: '2024-12-25T19:30:00.000Z',
+                event: {
+                  id: '6f2c8400-e29b-41d4-a716-446655440004',
+                  title: 'The Phantom of the Opera',
+                  thumbnail: 'https://example.com/events/phantom.jpg',
+                  place: 'Seoul Arts Center',
+                  cast: 'Kim Min-ji, Lee Jung-ho',
+                  ageLimit: 12,
+                  ticketingStartTime: '2024-11-01T10:00:00.000Z',
+                },
               },
-              "seat": {
-                "id": "5a1c8400-e29b-41d4-a716-446655440005",
-                "cx": 150,
-                "cy": 200,
-                "row": 5,
-                "number": 12,
-                "area": {
-                  "id": "4b1b8400-e29b-41d4-a716-446655440006",
-                  "no": 1,
-                  "label": "R",
-                  "price": 150000
-                }
-              }
-            }
-          ]
+              seat: {
+                id: '5a1c8400-e29b-41d4-a716-446655440005',
+                cx: 150,
+                cy: 200,
+                row: 5,
+                number: 12,
+                area: {
+                  id: '4b1b8400-e29b-41d4-a716-446655440006',
+                  no: 1,
+                  label: 'R',
+                  price: 150000,
+                },
+              },
+            },
+          ],
         },
       },
     },

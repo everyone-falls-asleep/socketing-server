@@ -211,9 +211,7 @@ export class EventsService {
       throw new CustomException(error.code, error.message, error.httpStatus);
     }
 
-    const newArea = this.areaRepository.create({
-
-    })
+    const newArea = this.areaRepository.create({});
 
     const seat = this.seatRepository.create({
       cx,

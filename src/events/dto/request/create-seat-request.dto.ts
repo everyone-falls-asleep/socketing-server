@@ -62,8 +62,6 @@ export class CreateSeatRequestDto {
   @IsOptional()
   no?: number;
 
-  
-
   @ApiProperty({
     description: 'Price of the seat',
     example: 77000,

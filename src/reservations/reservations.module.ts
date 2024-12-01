@@ -12,7 +12,17 @@ import { OrdersController } from './controllers/orders.controller';
 import { OrdersService } from './services/orders.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Reservation, User, Seat, Area, Order, Event, EventDate])],
+  imports: [
+    TypeOrmModule.forFeature([
+      Reservation,
+      User,
+      Seat,
+      Area,
+      Order,
+      Event,
+      EventDate,
+    ]),
+  ],
   controllers: [ReservationsController, OrdersController],
   providers: [ReservationsService, OrdersService],
   exports: [ReservationsService, OrdersService, TypeOrmModule],

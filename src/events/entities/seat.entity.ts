@@ -14,7 +14,7 @@ import {
 import { Area } from './area.entity';
 
 @Entity()
-@Unique([ 'area', 'row', 'number'])
+@Unique(['area', 'row', 'number'])
 export class Seat {
   @Expose()
   @PrimaryGeneratedColumn('uuid')
@@ -30,7 +30,7 @@ export class Seat {
 
   @ManyToOne(() => Area, (area) => area.seats, {
     onDelete: 'CASCADE',
-    nullable: true, /* migration */
+    nullable: true /* migration */,
   })
   area: Area | null;
 

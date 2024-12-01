@@ -67,55 +67,56 @@ export class ReservationsService {
     //   const savedReservation =
     //     await this.reservationRepository.save(newReservation);
 
-      // const reservationResponse = plainToInstance(
-      //   CreateReservationResponseDto,
-      //   savedReservation,
-      //   {
-      //     groups: ['detailed'],
-      //     excludeExtraneousValues: true,
-      //   },
-      // );
+    // const reservationResponse = plainToInstance(
+    //   CreateReservationResponseDto,
+    //   savedReservation,
+    //   {
+    //     groups: ['detailed'],
+    //     excludeExtraneousValues: true,
+    //   },
+    // );
 
-      // reservationResponse.eventDate = plainToInstance(
-      //   EventDateDto,
-      //   savedReservation.eventDate,
-      //   {
-      //     groups: ['basic'],
-      //     excludeExtraneousValues: true,
-      //   },
-      // );
+    // reservationResponse.eventDate = plainToInstance(
+    //   EventDateDto,
+    //   savedReservation.eventDate,
+    //   {
+    //     groups: ['basic'],
+    //     excludeExtraneousValues: true,
+    //   },
+    // );
 
-      // reservationResponse.seat = plainToInstance(
-      //   SeatDto,
-      //   savedReservation.seat,
-      //   {
-      //     groups: ['basic'],
-      //     excludeExtraneousValues: true,
-      //   },
-      // );
+    // reservationResponse.seat = plainToInstance(
+    //   SeatDto,
+    //   savedReservation.seat,
+    //   {
+    //     groups: ['basic'],
+    //     excludeExtraneousValues: true,
+    //   },
+    // );
 
-      // reservationResponse.user = plainToInstance(
-      //   UserDto,
-      //   savedReservation.user,
-      //   {
-      //     groups: ['basic'],
-      //     excludeExtraneousValues: true,
-      //   },
-      // );
+    // reservationResponse.user = plainToInstance(
+    //   UserDto,
+    //   savedReservation.user,
+    //   {
+    //     groups: ['basic'],
+    //     excludeExtraneousValues: true,
+    //   },
+    // );
 
-      // return new CommonResponse(reservationResponse);
-      return
-    } catch (e) {
-      if (e instanceof QueryFailedError && e.driverError.code === '23505') {
-        const uniqueError = ERROR_CODES.EXISTING_RESERVATION;
-        throw new CustomException(
-          uniqueError.code,
-          uniqueError.message,
-          uniqueError.httpStatus,
-        );
-      }
-      throw e;
+    // return new CommonResponse(reservationResponse);
+    return;
+  }
+  catch(e) {
+    if (e instanceof QueryFailedError && e.driverError.code === '23505') {
+      const uniqueError = ERROR_CODES.EXISTING_RESERVATION;
+      throw new CustomException(
+        uniqueError.code,
+        uniqueError.message,
+        uniqueError.httpStatus,
+      );
     }
+    throw e;
+  }
 
   // async findAllReservation(
   //   findAllReservationRequestDto: FindAllReservationRequestDto,
