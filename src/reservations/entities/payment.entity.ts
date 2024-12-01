@@ -6,15 +6,13 @@ import {
   DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
 export class Payment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  // @ManyToOne(() => User, (user) => user.payments)
-  // user: User;
 
   @Column('decimal', { precision: 10, scale: 2, default: 0 })
   paymentAmount: number;
@@ -36,11 +34,11 @@ export class Payment {
   @Column({ type: 'timestamp', nullable: true, default: null })
   paidAt: Date;
 
-  // @OneToMany(() => Reservation, (reservation) => reservation.payment)
-  // reservations: Reservation[];
-
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 
   @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt?: Date;

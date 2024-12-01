@@ -14,7 +14,11 @@ import { Seat } from 'src/events/entities/seat.entity';
 import { plainToInstance } from 'class-transformer';
 import { ReservationDto } from '../dto/base/reservation.dto';
 import { CreateOrderResponseDto } from '../dto/response/create-order-response.dto';
-import { CreateOrderUser } from '../dto/base/order.dto';
+import { UserDto } from 'src/users/dto/base/user.dto';
+import {
+  CreateOrderUser,
+  OrderWithDetailsDto,
+} from '../dto/order-with-details.dto';
 
 @Injectable()
 export class OrdersService {
@@ -82,34 +86,43 @@ export class OrdersService {
       const newOrder = this.orderRepository.create({
         user,
         orderStatus: OrderStatus.PENDING,
+        reservations: newReservations,
       });
 
-      const savedOrder = await queryRunner.manager.save(newOrder);
-      newReservations.map((r) => (r.order = savedOrder));
-      const savedReservations =
-        await this.reservationRepository.save(newReservations);
+      const savedOrder = await this.orderRepository.save(newOrder);
 
-      const orderResponse = plainToInstance(
-        CreateOrderResponseDto,
+      const userResponse = plainToInstance(CreateOrderUser, user, {
+        excludeExtraneousValues: true,
+      });
+
+      const orderWithDetails = plainToInstance(
+        OrderWithDetailsDto,
         {
           ...savedOrder,
-          totalAmount: totalAmount,
+          totalAmount,
+          user: userResponse,
         },
         {
           excludeExtraneousValues: true,
         },
       );
 
-      orderResponse.user = plainToInstance(CreateOrderUser, savedOrder.user, {
-        excludeExtraneousValues: true,
-      });
-
-      const reservationResponse = savedReservations.map((reservation) =>
+      const reservationResponse = savedOrder.reservations.map((reservation) =>
         plainToInstance(ReservationDto, reservation, {
           excludeExtraneousValues: true,
         }),
       );
-      orderResponse.reservations = reservationResponse;
+
+      const orderResponse = plainToInstance(
+        CreateOrderResponseDto,
+        {
+          order: [orderWithDetails],
+          reservations: reservationResponse,
+        },
+        {
+          excludeExtraneousValues: true,
+        },
+      );
 
       await queryRunner.commitTransaction();
       return new CommonResponse(orderResponse);

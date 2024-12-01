@@ -223,7 +223,6 @@ export class EventsService {
         event,
       });
 
-      // area를 저장하고 event 관계를 포함하여 다시 조회
       const savedArea = await this.areaRepository.save(newArea);
       const areaWithEvent = await this.areaRepository.findOne({
         where: { id: savedArea.id },
