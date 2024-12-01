@@ -7,6 +7,25 @@ export class CreateManySeatRequestDto {
   @ApiProperty({
     description: 'List of areas with their seats',
     type: [AreaWithSeats],
+    example: {
+      areas: [
+        {
+          id: 'area-id-1',
+          label: 'VIP Section',
+          price: 1000,
+          svg: '<svg>...</svg>',
+          seats: [
+            {
+              id: 'seat-id-1',
+              cx: 100,
+              cy: 200,
+              row: 1,
+              number: 1,
+            },
+          ],
+        },
+      ],
+    },
   })
   @Expose({ groups: ['basic', 'detailed'] })
   @IsArray()
