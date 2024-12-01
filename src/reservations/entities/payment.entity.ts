@@ -17,8 +17,8 @@ export class Payment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, (user) => user.payments)
-  user: User;
+  // @ManyToOne(() => User, (user) => user.payments)
+  // user: User;
 
   @Column('decimal', { precision: 10, scale: 2, default: 0 })
   paymentAmount: number;
@@ -33,15 +33,15 @@ export class Payment {
   @Column({
     type: 'enum',
     enum: PaymentStatus,
-    default: PaymentStatus.Pending,
+    default: PaymentStatus.PENDING,
   })
   paymentStatus: PaymentStatus;
 
   @Column({ type: 'timestamp', nullable: true, default: null })
   paidAt: Date;
 
-  @OneToMany(() => Reservation, (reservation) => reservation.payment)
-  reservations: Reservation[];
+  // @OneToMany(() => Reservation, (reservation) => reservation.payment)
+  // reservations: Reservation[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

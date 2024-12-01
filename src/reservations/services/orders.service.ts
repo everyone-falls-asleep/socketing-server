@@ -1,20 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { Order } from './entities/order.entity';
+import { Order } from '../entities/order.entity';
 import { DataSource, In, QueryFailedError, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommonResponse } from 'src/common/dto/common-response.dto';
-import { CreateOrderRequestDto } from './dto/request/create-order-request.dto';
+import { CreateOrderRequestDto } from '../dto/request/create-order-request.dto';
 import { User } from 'src/users/entities/user.entity';
 import { CustomException } from 'src/exceptions/custom-exception';
 import { ERROR_CODES } from 'src/contants/error-codes';
 import { OrderStatus } from 'src/common/enum/order-status';
-import { Reservation } from './entities/reservation.entity';
+import { Reservation } from '../entities/reservation.entity';
 import { EventDate } from 'src/events/entities/event-date.entity';
 import { Seat } from 'src/events/entities/seat.entity';
 import { plainToInstance } from 'class-transformer';
-import { ReservationDto } from './dto/base/reservation.dto';
+import { ReservationDto } from '../dto/base/reservation.dto';
 import { UserDto } from 'src/users/dto/base/user.dto';
-import { CreateOrderResponseDto } from './dto/response/create-order-response.dto';
+import { CreateOrderResponseDto } from '../dto/response/create-order-response.dto';
 
 @Injectable()
 export class OrdersService {

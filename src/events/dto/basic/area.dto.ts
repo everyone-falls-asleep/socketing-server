@@ -2,10 +2,10 @@ import { Expose, Type } from 'class-transformer';
 import { IsInt, IsString } from 'class-validator';
 import { BaseDto } from 'src/common/dto/base.dto';
 
-export class area extends BaseDto {
-  @Expose()
-  @Type(() => Event)
-  event: Event;
+export class AreaDto extends BaseDto {
+  // @Expose()
+  // @Type(() => Event)
+  // event: Event;
 
   @Expose()
   @IsInt()

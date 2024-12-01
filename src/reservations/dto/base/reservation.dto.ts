@@ -3,15 +3,9 @@ import { EventDateDto } from 'src/events/dto/basic/event-date-dto';
 import { SeatDto } from 'src/events/dto/basic/seat.dto';
 import { UserDto } from 'src/users/dto/base/user.dto';
 import { OrderDto } from './order.dto';
+import { BaseDto } from 'src/common/dto/base.dto';
 
-export class ReservationDto {
-  @Expose({ groups: ['basic', 'detailed', 'order'] })
-  id: string;
-
-  @Expose({ groups: ['basic', 'detailed'] })
-  @Type(() => UserDto)
-  user: UserDto;
-
+export class ReservationDto extends BaseDto {
   @Expose({ groups: ['basic', 'detailed', 'order'] })
   @Type(() => EventDateDto)
   eventDate: EventDateDto;
@@ -20,13 +14,7 @@ export class ReservationDto {
   @Type(() => SeatDto)
   seat: SeatDto;
 
-  @Expose({ groups: ['basic', 'detailed', 'order'] })
-  @Type(() => OrderDto)
-  order: OrderDto;
-
-  @Expose({ groups: ['detailed'] })
-  createdAt: Date;
-
-  @Expose({ groups: ['detailed'] })
-  updatedAt: Date;
+  // @Expose({ groups: ['basic', 'detailed', 'order'] })
+  // @Type(() => OrderDto)
+  // order: OrderDto;
 }

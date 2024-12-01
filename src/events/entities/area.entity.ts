@@ -10,17 +10,27 @@ import {
 } from 'typeorm';
 import { Seat } from './seat.entity';
 import { Event } from './event.entity';
+import { BaseDto } from 'src/common/dto/base.dto';
 
 @Entity()
 export class Area {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('int', { unsigned: true })
-  no: number;
+  // @Column('int', { unsigned: true })
+  // no: number;
 
   @Column({ type: 'text' })
   label: string;
+
+  @Column('int')
+  x: number;
+
+  @Column('int')
+  y: number;
+
+  @Column({ type: 'text', nullable: true })
+  svg?: string;
 
   @Column('int', { unsigned: true, default: 0 })
   price: number;
@@ -32,13 +42,4 @@ export class Area {
     cascade: true,
   })
   seats: Seat[];
-
-  @CreateDateColumn({ type: 'timestamp' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt: Date;
-
-  @DeleteDateColumn({ type: 'timestamp', nullable: true })
-  deletedAt?: Date;
 }

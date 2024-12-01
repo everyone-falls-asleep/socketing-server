@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { BaseDto } from 'src/reservations/dto/base/base.dto';
+import { BaseDto } from 'src/common/dto/base.dto';
 
 export class UserDto extends BaseDto {
   @Expose({ groups: ['basic', 'detailed'] })

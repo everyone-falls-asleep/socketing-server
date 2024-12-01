@@ -1,5 +1,7 @@
-import { IsInt, IsOptional } from 'class-validator';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import { Area } from 'src/events/entities/area.entity';
 
 export class CreateSeatRequestDto {
   @ApiProperty({
@@ -19,14 +21,6 @@ export class CreateSeatRequestDto {
   cy: number;
 
   @ApiProperty({
-    description: 'Area number where the seat is located',
-    example: 1,
-    type: Number,
-  })
-  @IsInt()
-  area: number;
-
-  @ApiProperty({
     description: 'Row number of the seat',
     example: 1,
     type: Number,
@@ -41,6 +35,34 @@ export class CreateSeatRequestDto {
   })
   @IsInt()
   number: number;
+
+  @ApiProperty({
+    description: 'Area label where the seat is located',
+    example: 1,
+    // type: String,
+  })
+  @IsOptional()
+  // @IsString()
+  label?: string;
+
+  @ApiProperty({
+    description: 'Area number of the seat',
+    example: 77000,
+    // type: String,
+  })
+  // @IsString()
+  area: string | number; // no로 변경 예정
+
+  @ApiProperty({
+    description: 'Area number of the seat',
+    example: 77000,
+    // type: number,
+  })
+  // @IsInt()
+  @IsOptional()
+  no?: number;
+
+  
 
   @ApiProperty({
     description: 'Price of the seat',

@@ -26,7 +26,7 @@ export class EventDto extends BaseDto {
   ticketingStartTime?: Date;
   //
 
-  @Expose({ groups: ['basic', 'detailed'] })
-  @Type(() => EventDateDto)
-  eventDates: EventDateDto[];
+  // @Expose({ groups: ['basic', 'detailed'] })
+  // @Type(() => EventDateDto)
+  // eventDates: EventDateDto[];
 }

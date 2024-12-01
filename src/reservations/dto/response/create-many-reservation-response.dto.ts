@@ -1,5 +1,7 @@
 import { Expose, Type } from 'class-transformer';
-import { IsDate, IsString } from 'class-validator';
+import { IsDate, IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
+import { PaymentMethod } from 'src/common/enum/payment-method';
+import { PaymentStatus } from 'src/common/enum/payment-status';
 import { EventDateDto } from 'src/events/dto/basic/event-date-dto';
 import { SeatDto } from 'src/events/dto/basic/seat.dto';
 import { UserDto } from 'src/users/dto/base/user.dto';

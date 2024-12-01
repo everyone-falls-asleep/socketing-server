@@ -1,8 +1,8 @@
 import { Expose, Type } from 'class-transformer';
 import { IsDate, IsString } from 'class-validator';
-import { EventDateDto } from 'src/events/dto/event-date-dto';
-import { SeatDto } from 'src/events/dto/seat.dto';
-import { UserDto } from 'src/users/dto/user.dto';
+import { EventDateDto } from 'src/events/dto/basic/event-date-dto';
+import { SeatDto } from 'src/events/dto/basic/seat.dto';
+import { UserDto } from 'src/users/dto/base/user.dto';
 
 export class CreateManyReservationResponseDto {
   @Expose({ groups: ['basic', 'detailed'] })

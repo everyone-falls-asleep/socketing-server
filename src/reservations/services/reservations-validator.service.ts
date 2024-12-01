@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Seat } from 'src/events/entities/seat.entity';
 import { EventDate } from 'src/events/entities/event-date.entity';
-import { Reservation } from './entities/reservation.entity';
 import { In, IsNull, Repository } from 'typeorm';
 import { CustomException } from 'src/exceptions/custom-exception';
 import { ERROR_CODES } from 'src/contants/error-codes';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Reservation } from '../entities/reservation.entity';
 
 @Injectable()
 export class ReservationValidatorService {
@@ -35,7 +35,7 @@ export class ReservationValidatorService {
     const seats = await this.seatRepository.find({
       where: {
         id: In(seatIds),
-        event: { id: eventDate.event.id },
+        // event: { id: eventDate.event.id },
       },
     });
 
@@ -60,10 +60,7 @@ export class ReservationValidatorService {
         eventDate: { id: eventDate.id },
         seat: { id: In(seats.map((seat) => seat.id)) },
         deletedAt: IsNull(),
-        deletedAt: IsNull(),
       },
-      select: ['id', 'seat', 'deletedAt'],
-      relations: ['seat'],
       select: ['id', 'seat', 'deletedAt'],
       relations: ['seat'],
     });

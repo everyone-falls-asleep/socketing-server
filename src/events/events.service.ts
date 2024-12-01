@@ -5,23 +5,26 @@ import { Event } from './entities/event.entity';
 import { CommonResponse } from 'src/common/dto/common-response.dto';
 import { ERROR_CODES } from 'src/contants/error-codes';
 import { CustomException } from 'src/exceptions/custom-exception';
-import { CreateEventRequestDto } from './dto/request/create-event-request.dto';
-import { plainToInstance } from 'class-transformer';
+import { plainToInstance, Transform } from 'class-transformer';
 import { CreateEventResponseDto } from './dto/create-event-response.dto';
-import { UpdateEventRequestDto } from './dto/request/update-event-request.dto';
 import { UpdateEventResponseDto } from './dto/update-event-response.dto';
 import { Seat } from './entities/seat.entity';
-import { CreateSeatRequestDto } from './dto/request/create-seat-request.dto';
 import { CreateSeatResponseDto } from './dto/create-seat-response.dto';
-import { UpdateSeatRequestDto } from './dto/request/update-seat-request.dto';
 import { UpdateSeatResponseDto } from './dto/update-seat-response.dto';
 import { User } from 'src/users/entities/user.entity';
+import { UpdateEventRequestDto } from './dto/request/update-event-request.dto';
+import { CreateSeatRequestDto } from './dto/request/create-seat-request.dto';
+import { CreateEventRequestDto } from './dto/request/create-event-request.dto';
+import { UpdateSeatRequestDto } from './dto/request/update-seat-request.dto';
+import { Area } from './entities/area.entity';
 
 @Injectable()
 export class EventsService {
   constructor(
     @InjectRepository(Event)
     private readonly eventRepository: Repository<Event>,
+    @InjectRepository(Area)
+    private readonly areaRepository: Repository<Area>,
     @InjectRepository(Seat)
     private readonly seatRepository: Repository<Seat>,
     @InjectRepository(User)
@@ -197,7 +200,7 @@ export class EventsService {
     eventId: string,
     createSeatRequestDto: CreateSeatRequestDto,
   ): Promise<CommonResponse<CreateSeatResponseDto>> {
-    const { cx, cy, area, row, number, price } = createSeatRequestDto;
+    const { cx, cy, row, number, label, area, price } = createSeatRequestDto;
 
     const event = await this.eventRepository.findOne({
       where: { id: eventId },
@@ -208,14 +211,15 @@ export class EventsService {
       throw new CustomException(error.code, error.message, error.httpStatus);
     }
 
+    const newArea = this.areaRepository.create({
+
+    })
+
     const seat = this.seatRepository.create({
       cx,
       cy,
-      area,
       row,
       number,
-      price,
-      event,
     });
 
     try {
@@ -246,8 +250,8 @@ export class EventsService {
         'seat.cx',
         'seat.cy',
         'seat.area',
+        'seat.row',
         'seat.number',
-        'seat.price',
         'seat.createdAt',
         'seat.updatedAt',
       ])
@@ -270,7 +274,6 @@ export class EventsService {
         'seat.area',
         'seat.row',
         'seat.number',
-        'seat.price',
         'seat.createdAt',
         'seat.updatedAt',
         'event.id',
@@ -300,7 +303,7 @@ export class EventsService {
     seatId: string,
     UpdateSeatRequestDto: UpdateSeatRequestDto,
   ): Promise<CommonResponse<UpdateSeatResponseDto>> {
-    const { cx, cy, area, row, number, price } = UpdateSeatRequestDto;
+    const { cx, cy, area, row, number } = UpdateSeatRequestDto;
 
     const event = await this.eventRepository.findOne({
       where: { id: eventId },
@@ -312,7 +315,7 @@ export class EventsService {
     }
 
     const seat = await this.seatRepository.findOne({
-      where: { id: seatId, event: { id: eventId } },
+      // where: { id: seatId, event: { id: eventId } },
       relations: ['event'],
     });
 
@@ -323,8 +326,7 @@ export class EventsService {
 
     seat.cx = cx;
     seat.cy = cy;
-    seat.area = area;
-    seat.price = price;
+    // seat.area = area;
     seat.row = row;
     seat.number = number;
 
@@ -338,7 +340,7 @@ export class EventsService {
 
   async deleteSeat(eventId: string, seatId: string) {
     const seat = await this.seatRepository.findOne({
-      where: { id: seatId, event: { id: eventId } },
+      // where: { id: seatId, event: { id: eventId } },
     });
 
     if (!seat) {
@@ -366,7 +368,6 @@ export class EventsService {
         'seat.area',
         'seat.row',
         'seat.number',
-        'seat.price',
         'reservation.id',
         'eventDate.id',
         'eventDate.date',
@@ -406,7 +407,6 @@ export class EventsService {
         'seat.area',
         'seat.row',
         'seat.number',
-        'seat.price',
         'reservation.id',
         'eventDate.id',
         'eventDate.date',

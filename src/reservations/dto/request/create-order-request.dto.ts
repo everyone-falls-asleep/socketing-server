@@ -18,7 +18,9 @@ export class CreateOrderRequestDto {
 
   @ApiProperty({
     description: 'The UUID list of the seats being reserved',
-    example: '323e4567-e89b-12d3-a456-426614174002',
+    example: ['323e4567-e89b-12d3-a456-426614174002', '323e4567-e89b-12d3-a456-426614174003'],
+    isArray: true,
+    type: String
   })
   @IsNotEmpty()
   readonly seatIds: string[];

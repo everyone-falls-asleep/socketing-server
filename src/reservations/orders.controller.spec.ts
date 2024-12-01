@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrdersController } from './orders.controller';
-import { OrdersService } from './orders.service';
+import { OrdersService } from './services/orders.service';
 import { CreateOrderRequestDto } from './dto/request/create-order-request.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
