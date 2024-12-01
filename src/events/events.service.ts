@@ -5,7 +5,7 @@ import { Event } from './entities/event.entity';
 import { CommonResponse } from 'src/common/dto/common-response.dto';
 import { ERROR_CODES } from 'src/contants/error-codes';
 import { CustomException } from 'src/exceptions/custom-exception';
-import { plainToInstance, Transform } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { Seat } from './entities/seat.entity';
 import { User } from 'src/users/entities/user.entity';
 import { UpdateEventRequestDto } from './dto/request/update-event-request.dto';
@@ -19,6 +19,7 @@ import { CreateSeatResponseDto } from './dto/response/create-seat-response.dto';
 import { UpdateSeatResponseDto } from './dto/response/update-seat-response.dto';
 import { CreateManySeatRequestDto } from './dto/request/create-many-seat-request.dto';
 import { CreateManySeatResponseDto } from './dto/response/create-many-seat-response.dto';
+import { EventDto } from './dto/basic/event.dto';
 
 @Injectable()
 export class EventsService {
@@ -202,7 +203,7 @@ export class EventsService {
     eventId: string,
     createSeatRequestDto: CreateSeatRequestDto,
   ): Promise<CommonResponse<CreateSeatResponseDto>> {
-    const { cx, cy, row, number, label, area, price } = createSeatRequestDto;
+    const { cx, cy, row, number, svg, label, price } = createSeatRequestDto;
 
     const event = await this.eventRepository.findOne({
       where: { id: eventId },
@@ -213,20 +214,50 @@ export class EventsService {
       throw new CustomException(error.code, error.message, error.httpStatus);
     }
 
-    const newArea = this.areaRepository.create({});
-
-    const seat = this.seatRepository.create({
-      cx,
-      cy,
-      row,
-      number,
-    });
-
     try {
+      /* migration code */
+      const newArea = this.areaRepository.create({
+        label: label ?? null,
+        price: price ?? null,
+        svg: svg ?? null,
+        event,
+      });
+
+      // area를 저장하고 event 관계를 포함하여 다시 조회
+      const savedArea = await this.areaRepository.save(newArea);
+      const areaWithEvent = await this.areaRepository.findOne({
+        where: { id: savedArea.id },
+        relations: ['event'],
+      });
+
+      const seat = this.seatRepository.create({
+        cx,
+        cy,
+        row,
+        number,
+        area: areaWithEvent,
+      });
       const savedSeat = await this.seatRepository.save(seat);
-      const seatResponse = plainToInstance(CreateSeatResponseDto, savedSeat, {
+
+      const seatResponse = plainToInstance(
+        CreateSeatResponseDto,
+        {
+          ...savedSeat,
+          area: areaWithEvent.id,
+          svg: areaWithEvent.svg,
+          label: areaWithEvent.label,
+          price: areaWithEvent.price,
+        },
+        {
+          excludeExtraneousValues: true,
+        },
+      );
+
+      // event data가 안 담김....
+      seatResponse.event = plainToInstance(EventDto, savedSeat.area.event, {
         excludeExtraneousValues: true,
       });
+
       return new CommonResponse(seatResponse);
     } catch (e) {
       if (e instanceof QueryFailedError && e.driverError.code === '23505') {
@@ -262,11 +293,10 @@ export class EventsService {
           const newArea = this.areaRepository.create({
             label: area.label,
             price: area.price,
-            x: area.x,
-            y: area.y,
             svg: area.svg,
             event,
           });
+
           const savedArea = await this.areaRepository.save(newArea);
 
           const seatEntities = area.seats.map((seat) =>
@@ -285,10 +315,16 @@ export class EventsService {
         }),
       );
 
-      const response = plainToInstance(CreateManySeatResponseDto, {
-        event,
-        areas: savedAreas,
-      });
+      const response = plainToInstance(
+        CreateManySeatResponseDto,
+        {
+          event,
+          areas: savedAreas,
+        },
+        {
+          excludeExtraneousValues: true,
+        },
+      );
 
       return new CommonResponse(response);
     } catch (e) {
@@ -366,7 +402,7 @@ export class EventsService {
     seatId: string,
     UpdateSeatRequestDto: UpdateSeatRequestDto,
   ): Promise<CommonResponse<UpdateSeatResponseDto>> {
-    const { cx, cy, area, row, number } = UpdateSeatRequestDto;
+    const { cx, cy, row, number } = UpdateSeatRequestDto;
 
     const event = await this.eventRepository.findOne({
       where: { id: eventId },

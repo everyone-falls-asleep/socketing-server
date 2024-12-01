@@ -1,4 +1,3 @@
-import { ReservationDto } from 'src/reservations/dto/base/reservation.dto';
 import { EventDto } from './event.dto';
 import { Expose, Type } from 'class-transformer';
 import { BaseDto } from 'src/common/dto/base.dto';

@@ -14,3 +14,21 @@ export class CreateManySeatRequestDto {
   @Type(() => AreaWithSeats)
   areas: AreaWithSeats[];
 }
+
+// @ApiProperty({
+//   description: 'Area label where the seat is located',
+//   example: 1,
+//   // type: String,
+// })
+// @IsOptional()
+// // @IsString()
+// label?: string;
+
+// @ApiProperty({
+//   description: 'Price of the seat',
+//   example: 77000,
+//   type: Number,
+// })
+// @IsOptional() /* After migration, remove it */
+// @IsInt()
+// price?: number;

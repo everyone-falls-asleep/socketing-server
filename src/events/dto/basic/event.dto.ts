@@ -1,5 +1,4 @@
-import { Expose, Type } from 'class-transformer';
-import { EventDateDto } from './event-date-dto';
+import { Expose } from 'class-transformer';
 import { BaseDto } from 'src/common/dto/base.dto';
 
 export class EventDto extends BaseDto {

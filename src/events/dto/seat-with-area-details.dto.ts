@@ -1,9 +1,8 @@
-import { Expose, Type } from 'class-transformer';
+import { Expose } from 'class-transformer';
 import { BaseDto } from 'src/common/dto/base.dto';
-import { AreaDto } from './area.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SeatDto extends BaseDto {
+export class SeatWithAreaDetailsDto extends BaseDto {
   @ApiProperty({
     description: 'X-coordinate of the seat',
     example: 100,
@@ -20,13 +19,13 @@ export class SeatDto extends BaseDto {
   @Expose({ groups: ['basic', 'detailed'] })
   cy: number;
 
-  @ApiProperty({
-    description: 'Area information for the seat',
-    type: () => AreaDto,
-  })
-  @Expose({ groups: ['basic', 'detailed'] })
-  @Type(() => AreaDto)
-  area: AreaDto;
+  // @ApiProperty({
+  //   description: 'Area information for the seat',
+  //   type: () => AreaDto,
+  // })
+  // @Expose({ groups: ['basic', 'detailed'] })
+  // @Type(() => AreaDto)
+  // area: AreaDto;
 
   @ApiProperty({
     description: 'Row number of the seat',
@@ -46,5 +45,4 @@ export class SeatDto extends BaseDto {
 
   // @Expose({ groups: ['basic', 'detailed'] })
   // @Type(() => ReservationDto)
-  // reservations: ReservationDto[];
 }

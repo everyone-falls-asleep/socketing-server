@@ -7,12 +7,9 @@ import { Seat } from 'src/events/entities/seat.entity';
 import { QueryFailedError, Repository } from 'typeorm';
 import { ERROR_CODES } from 'src/contants/error-codes';
 import { CustomException } from 'src/exceptions/custom-exception';
-import { plainToInstance } from 'class-transformer';
 import { Injectable } from '@nestjs/common';
 import { CreateReservationRequestDto } from '../dto/request/create-reservation-request.dto';
 import { CreateReservationResponseDto } from '../dto/response/create-reservation-response.dto';
-import { FindAllReservationResponseDto } from '../dto/response/find-all-reservation-response.dto';
-import { FindAllReservationRequestDto } from '../dto/request/find-all-reservation-request.dto';
 
 @Injectable()
 export class ReservationsService {

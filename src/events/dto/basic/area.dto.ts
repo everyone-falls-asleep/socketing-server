@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose, Type } from 'class-transformer';
-import { IsInt, IsOptional, IsString } from 'class-validator';
+import { Expose } from 'class-transformer';
+import { IsInt, IsString } from 'class-validator';
 import { BaseDto } from 'src/common/dto/base.dto';
 
 export class AreaDto extends BaseDto {

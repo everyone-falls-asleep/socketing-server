@@ -13,7 +13,6 @@ import { EventDate } from 'src/events/entities/event-date.entity';
 import { Seat } from 'src/events/entities/seat.entity';
 import { plainToInstance } from 'class-transformer';
 import { ReservationDto } from '../dto/base/reservation.dto';
-import { UserDto } from 'src/users/dto/base/user.dto';
 import { CreateOrderResponseDto } from '../dto/response/create-order-response.dto';
 import { CreateOrderUser } from '../dto/base/order.dto';
 
@@ -71,20 +70,20 @@ export class OrdersService {
 
     const totalAmount = seats.reduce((sum, seat) => sum + seat.area.price, 0);
 
-    const newReservations = seats.map((seat) => {
-      const reservation = this.reservationRepository.create({
-        eventDate,
-        seat,
-      });
-      return reservation;
-    });
-
-    const newOrder = this.orderRepository.create({
-      user,
-      orderStatus: OrderStatus.PENDING,
-    });
-
     try {
+      const newReservations = seats.map((seat) => {
+        const reservation = this.reservationRepository.create({
+          eventDate,
+          seat,
+        });
+        return reservation;
+      });
+
+      const newOrder = this.orderRepository.create({
+        user,
+        orderStatus: OrderStatus.PENDING,
+      });
+
       const savedOrder = await queryRunner.manager.save(newOrder);
       newReservations.map((r) => (r.order = savedOrder));
       const savedReservations =
@@ -102,7 +101,6 @@ export class OrdersService {
       );
 
       orderResponse.user = plainToInstance(CreateOrderUser, savedOrder.user, {
-        groups: ['order'],
         excludeExtraneousValues: true,
       });
 

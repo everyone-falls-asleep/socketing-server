@@ -1,8 +1,6 @@
 import { Expose, Type } from 'class-transformer';
 import { EventDateDto } from 'src/events/dto/basic/event-date-dto';
 import { SeatDto } from 'src/events/dto/basic/seat.dto';
-import { UserDto } from 'src/users/dto/base/user.dto';
-import { OrderDto } from './order.dto';
 import { BaseDto } from 'src/common/dto/base.dto';
 
 export class ReservationDto extends BaseDto {

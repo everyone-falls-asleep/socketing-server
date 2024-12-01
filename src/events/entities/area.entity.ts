@@ -10,33 +10,45 @@ import {
 } from 'typeorm';
 import { Seat } from './seat.entity';
 import { Event } from './event.entity';
-import { BaseDto } from 'src/common/dto/base.dto';
 
+/* allow null for migration */
 @Entity()
 export class Area {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'text' })
-  label: string;
+  @Column({ type: 'text', nullable: true })
+  label: string | null;
 
-  @Column('int', { unsigned: true, default: 0 })
-  price: number;
+  @Column('int', { unsigned: true, default: 0, nullable: true })
+  price: number | null;
 
-  @Column('int')
-  x: number;
+  @Column('int', { nullable: true })
+  x: number | null;
 
-  @Column('int')
-  y: number;
+  @Column('int', { nullable: true })
+  y: number | null;
 
   @Column({ type: 'text', nullable: true })
-  svg?: string;
+  svg: string | null;
 
-  @ManyToOne(() => Event, (event) => event.areas, { onDelete: 'CASCADE' })
-  event: Event;
+  @ManyToOne(() => Event, (event) => event.areas, {
+    onDelete: 'CASCADE',
+    nullable: true,
+  })
+  event: Event | null;
 
   @OneToMany(() => Seat, (seat) => seat.area, {
     cascade: true,
   })
   seats: Seat[];
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ type: 'timestamp', nullable: true })
+  deletedAt?: Date;
 }

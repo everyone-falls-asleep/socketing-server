@@ -1,7 +1,5 @@
 import { IsInt, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
-import { Area } from 'src/events/entities/area.entity';
 
 export class CreateSeatRequestDto {
   @ApiProperty({
@@ -11,7 +9,7 @@ export class CreateSeatRequestDto {
   })
   @IsInt()
   cx: number;
-  z;
+
   @ApiProperty({
     description: 'Y-coordinate of the seat',
     example: 50,
@@ -19,6 +17,14 @@ export class CreateSeatRequestDto {
   })
   @IsInt()
   cy: number;
+
+  @ApiProperty({
+    description: 'Area number of the seat',
+    example: 1,
+    // type: String,
+  })
+  @IsOptional()
+  area?: number;
 
   @ApiProperty({
     description: 'Row number of the seat',
@@ -36,38 +42,53 @@ export class CreateSeatRequestDto {
   @IsInt()
   number: number;
 
+  // @ApiProperty({
+  //   description: 'X-coordinate of the area',
+  //   example: 0,
+  //   type: Number,
+  // })
+  // @IsOptional()
+  // @IsInt()
+  // x?: number;
+
+  // @ApiProperty({
+  //   description: 'Y-coordinate of the area',
+  //   example: 0,
+  //   type: Number,
+  // })
+  // @IsOptional()
+  // @IsInt()
+  // y?: number;
+
   @ApiProperty({
-    description: 'Area label where the seat is located',
-    example: 1,
-    // type: String,
+    description: 'SVG representation of the area',
+    example: 0,
+    type: String,
   })
   @IsOptional()
-  // @IsString()
+  @IsString()
+  svg?: string;
+
+  @ApiProperty({
+    description: 'Name of the area',
+    example: 'Section A',
+    type: String,
+  })
+  @ApiProperty({
+    description: 'Name of the area',
+    example: 'Section A',
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
   label?: string;
 
   @ApiProperty({
-    description: 'Area number of the seat',
-    example: 77000,
-    // type: String,
+    description: 'Price of the area',
+    example: '10000',
+    type: String,
   })
-  // @IsString()
-  area: string | number; // no로 변경 예정
-
-  @ApiProperty({
-    description: 'Area number of the seat',
-    example: 77000,
-    // type: number,
-  })
-  // @IsInt()
   @IsOptional()
-  no?: number;
-
-  @ApiProperty({
-    description: 'Price of the seat',
-    example: 77000,
-    type: Number,
-  })
-  @IsOptional() /* After migration, remove it */
   @IsInt()
   price?: number;
 }
