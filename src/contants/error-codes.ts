@@ -69,4 +69,14 @@ export const ERROR_CODES = {
     message: 'Reservation not found',
     httpStatus: 404,
   },
+  ORDER_NOT_FOUND: {
+    code: 15,
+    message: 'Order not found',
+    httpStatus: 404,
+  },
+  ORDER_USER_MISMATCH: {
+    code: 16,
+    message: 'The order does not belong to the current user',
+    httpStatus: 403,
+  },
 };

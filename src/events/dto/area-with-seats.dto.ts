@@ -30,7 +30,7 @@ export class AreaWithSeats extends AreaDto {
     type: String,
   })
   @Expose()
-  @IsString()
+  // @IsString()
   svg: string;
 
   @ApiProperty({

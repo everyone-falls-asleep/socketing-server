@@ -1,4 +1,3 @@
-import { OrderStatus } from 'src/common/enum/order-status';
 import { User } from 'src/users/entities/user.entity';
 import { Reservation } from './reservation.entity';
 import {
@@ -11,6 +10,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Payment } from './payment.entity';
 
 /* migration) 일단 not null 유지 */
 @Entity()
@@ -18,12 +18,12 @@ export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({
-    type: 'enum',
-    enum: OrderStatus,
-    default: OrderStatus.PENDING,
-  })
-  orderStatus: OrderStatus;
+  // @Column({
+  //   type: 'enum',
+  //   enum: OrderStatus,
+  //   default: OrderStatus.PENDING,
+  // })
+  // orderStatus: OrderStatus;
 
   // 양방향 매핑
   @ManyToOne(() => User, (user) => user.orders, {
@@ -35,6 +35,11 @@ export class Order {
     onDelete: 'CASCADE',
   })
   reservations: Reservation[];
+
+  @OneToMany(() => Order, (order) => order.payments, {
+    onDelete: 'CASCADE',
+  })
+  payments: Payment[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { IsInt, IsString } from 'class-validator';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 import { BaseDto } from 'src/common/dto/base.dto';
 
-export class AreaDto extends BaseDto {
+export class AreaDto {
   // @Expose()
   // @Type(() => Event)
   // event: Event;
@@ -18,6 +18,7 @@ export class AreaDto extends BaseDto {
   label: string;
 
   @Expose()
-  @IsInt()
+  // @IsInt()
+  @IsOptional()
   price: number;
 }

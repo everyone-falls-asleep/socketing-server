@@ -10,6 +10,9 @@ import { Order } from './entities/order.entity';
 import { ReservationsController } from './controllers/reservations.controller';
 import { OrdersController } from './controllers/orders.controller';
 import { OrdersService } from './services/orders.service';
+import { Payment } from './entities/payment.entity';
+import { PaymentsController } from './controllers/payments.controller';
+import { PaymentsService } from './services/payments.service';
 
 @Module({
   imports: [
@@ -21,10 +24,11 @@ import { OrdersService } from './services/orders.service';
       Order,
       Event,
       EventDate,
+      Payment,
     ]),
   ],
-  controllers: [ReservationsController, OrdersController],
-  providers: [ReservationsService, OrdersService],
-  exports: [ReservationsService, OrdersService, TypeOrmModule],
+  controllers: [ReservationsController, OrdersController, PaymentsController],
+  providers: [ReservationsService, OrdersService, PaymentsService],
+  exports: [ReservationsService, OrdersService, PaymentsService, TypeOrmModule],
 })
 export class ReservationsModule {}

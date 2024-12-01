@@ -33,6 +33,7 @@ import { UpdateEventResponseDto } from './dto/response/update-event-response.dto
 import { CreateEventResponseDto } from './dto/response/create-event-response.dto';
 import { CreateSeatResponseDto } from './dto/response/create-seat-response.dto';
 import { UpdateSeatResponseDto } from './dto/response/update-seat-response.dto';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 
 @ApiTags('Events')
 @Controller('events')
@@ -538,9 +539,9 @@ export class EventsController {
   @UseGuards(JwtAuthGuard)
   createManySeat(
     @Param('id') eventId: string,
-    @Body() createManySeatRequestDto: CreateManySeatRequestDto,
+    @Body() body: any,
   ): Promise<CommonResponse<CreateManySeatResponseDto>> {
-    return this.eventService.createManySeat(eventId, createManySeatRequestDto);
+    return this.eventService.createManySeat(eventId, body);
   }
 
   @ApiOperation({ summary: 'Create a new seat for a specific event' })

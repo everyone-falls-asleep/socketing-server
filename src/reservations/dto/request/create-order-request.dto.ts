@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsInt, IsNotEmpty } from 'class-validator';
 
 export class CreateOrderRequestDto {
   @ApiProperty({
@@ -7,6 +7,7 @@ export class CreateOrderRequestDto {
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
   @IsNotEmpty()
+  @IsInt()
   readonly eventId: string;
 
   @ApiProperty({
@@ -14,6 +15,7 @@ export class CreateOrderRequestDto {
     example: '223e4567-e89b-12d3-a456-426614174001',
   })
   @IsNotEmpty()
+  @IsInt()
   readonly eventDateId: string;
 
   @ApiProperty({
@@ -26,5 +28,6 @@ export class CreateOrderRequestDto {
     type: String,
   })
   @IsNotEmpty()
+  @IsInt()
   readonly seatIds: string[];
 }

@@ -2,7 +2,7 @@ import { Expose } from 'class-transformer';
 import { BaseDto } from 'src/common/dto/base.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SeatWithAreaDetailsDto extends BaseDto {
+export class SeatWithAreaDetailsDto {
   @ApiProperty({
     description: 'X-coordinate of the seat',
     example: 100,

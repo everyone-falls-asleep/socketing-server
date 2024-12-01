@@ -1,41 +1,13 @@
 import { Expose, Type } from 'class-transformer';
-import { IsDate, IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
-import { PaymentMethod } from 'src/common/enum/payment-method';
-import { PaymentStatus } from 'src/common/enum/payment-status';
+import { IsDate, IsString } from 'class-validator';
 import { EventDateDto } from 'src/events/dto/basic/event-date-dto';
 import { SeatDto } from 'src/events/dto/basic/seat.dto';
 import { UserDto } from 'src/users/dto/base/user.dto';
 
 export class CreateManyReservationResponseDto {
   @Expose({ groups: ['basic', 'detailed'] })
-  @IsOptional()
   @IsString()
-  paymentId?: string | null;
-
-  @Expose({ groups: ['basic', 'detailed'] })
-  @IsOptional()
-  @IsInt()
-  paymentAmount?: number | null;
-
-  @Expose({ groups: ['basic', 'detailed'] })
-  @IsOptional()
-  @IsEnum(PaymentMethod)
-  paymentMethod?: PaymentMethod | null;
-
-  @Expose({ groups: ['basic', 'detailed'] })
-  @IsOptional()
-  @IsEnum(PaymentStatus)
-  paymentStatus?: PaymentStatus | null;
-
-  @Expose({ groups: ['basic', 'detailed'] })
-  @IsOptional()
-  @IsDate()
-  paidAt?: Date | null;
-
-  @Expose({ groups: ['basic', 'detailed'] })
-  @IsOptional()
-  @IsDate()
-  paymentCreatedAt?: Date | null;
+  id: string;
 
   @Expose({ groups: ['basic', 'detailed'] })
   @Type(() => UserDto)
@@ -51,7 +23,7 @@ export class CreateManyReservationResponseDto {
 
   @Expose({ groups: ['detailed'] })
   @IsDate()
-  reservatioinCreatedAt: Date;
+  createdAt: Date;
 
   @Expose({ groups: ['detailed'] })
   @IsDate()

@@ -7,7 +7,7 @@ import { CreateOrderRequestDto } from '../dto/request/create-order-request.dto';
 import { User } from 'src/users/entities/user.entity';
 import { CustomException } from 'src/exceptions/custom-exception';
 import { ERROR_CODES } from 'src/contants/error-codes';
-import { OrderStatus } from 'src/common/enum/order-status';
+// import { OrderStatus } from 'src/common/enum/order-status';
 import { Reservation } from '../entities/reservation.entity';
 import { EventDate } from 'src/events/entities/event-date.entity';
 import { Seat } from 'src/events/entities/seat.entity';
@@ -19,6 +19,7 @@ import {
   CreateOrderUser,
   OrderWithDetailsDto,
 } from '../dto/order-with-details.dto';
+import { ReservationWithSeatDetailsDto } from 'src/events/dto/reservation-with-seat-details.dto';
 
 @Injectable()
 export class OrdersService {
@@ -85,7 +86,7 @@ export class OrdersService {
 
       const newOrder = this.orderRepository.create({
         user,
-        orderStatus: OrderStatus.PENDING,
+        // orderStatus: OrderStatus.PENDING,
         reservations: newReservations,
       });
 
@@ -107,16 +108,26 @@ export class OrdersService {
         },
       );
 
-      const reservationResponse = savedOrder.reservations.map((reservation) =>
-        plainToInstance(ReservationDto, reservation, {
-          excludeExtraneousValues: true,
-        }),
-      );
+      const reservationResponse = savedOrder.reservations.map((reservation) => {
+        const { id, eventDate, seat } = reservation;
+
+        return plainToInstance(
+          ReservationWithSeatDetailsDto,
+          {
+            id,
+            seat,
+          },
+          {
+            excludeExtraneousValues: true,
+          },
+        );
+      });
 
       const orderResponse = plainToInstance(
         CreateOrderResponseDto,
         {
-          order: [orderWithDetails],
+          order: orderWithDetails,
+          event: eventDate.event,
           reservations: reservationResponse,
         },
         {

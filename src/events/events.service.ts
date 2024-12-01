@@ -20,6 +20,7 @@ import { UpdateSeatResponseDto } from './dto/response/update-seat-response.dto';
 import { CreateManySeatRequestDto } from './dto/request/create-many-seat-request.dto';
 import { CreateManySeatResponseDto } from './dto/response/create-many-seat-response.dto';
 import { EventDto } from './dto/basic/event.dto';
+import { create } from 'domain';
 
 @Injectable()
 export class EventsService {
@@ -273,7 +274,7 @@ export class EventsService {
 
   async createManySeat(
     eventId: string,
-    createManySeatRequestDto: CreateManySeatRequestDto,
+    createManySeatRequestDto: any,
   ): Promise<CommonResponse<CreateManySeatResponseDto>> {
     const event = await this.eventRepository.findOne({
       where: { id: eventId },
@@ -284,7 +285,11 @@ export class EventsService {
       throw new CustomException(error.code, error.message, error.httpStatus);
     }
 
+    console.log(createManySeatRequestDto);
+
     const { areas } = createManySeatRequestDto;
+    console.log(areas);
+    // console.log('Raw areas data:', JSON.stringify(areas, null, 2));
 
     try {
       const savedAreas = await Promise.all(

@@ -6,9 +6,9 @@ import { PaymentStatus } from 'src/common/enum/payment-status';
 import { UserDto } from 'src/users/dto/base/user.dto';
 
 export class PaymentDto extends BaseDto {
-  @Expose({ groups: ['basic', 'detailed'] })
-  @Type(() => UserDto)
-  user: UserDto;
+  // @Expose({ groups: ['basic', 'detailed'] })
+  // @Type(() => UserDto)
+  // user: UserDto;
 
   @Expose({ groups: ['basic', 'detailed'] })
   @IsInt()

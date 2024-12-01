@@ -5,14 +5,28 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
+import { Order } from './order.entity';
 
 @Entity()
+@Unique(['orderId', 'paymentMethod'])
 export class Payment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @ManyToOne(() => Order, (order) => order.payments, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'orderId' })
+  order: Order;
+
+  @Column()
+  orderId: string;
 
   @Column('decimal', { precision: 10, scale: 2, default: 0 })
   paymentAmount: number;
@@ -20,7 +34,6 @@ export class Payment {
   @Column({
     type: 'enum',
     enum: PaymentMethod,
-    default: PaymentMethod.NONE,
   })
   paymentMethod: PaymentMethod;
 
