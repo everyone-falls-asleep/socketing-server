@@ -15,6 +15,7 @@ import { plainToInstance } from 'class-transformer';
 import { ReservationDto } from '../dto/base/reservation.dto';
 import { UserDto } from 'src/users/dto/base/user.dto';
 import { CreateOrderResponseDto } from '../dto/response/create-order-response.dto';
+import { CreateOrderUser } from '../dto/base/order.dto';
 
 @Injectable()
 export class OrdersService {
@@ -100,7 +101,7 @@ export class OrdersService {
         },
       );
 
-      orderResponse.user = plainToInstance(UserDto, savedOrder.user, {
+      orderResponse.user = plainToInstance(CreateOrderUser, savedOrder.user, {
         groups: ['order'],
         excludeExtraneousValues: true,
       });

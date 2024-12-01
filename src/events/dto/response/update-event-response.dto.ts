@@ -1,6 +1,5 @@
 import { Expose, Type } from 'class-transformer';
 import { IsArray, IsDate, IsInt, IsOptional, IsString } from 'class-validator';
-import { EventDateDto } from './basic/event-date-dto';
 
 export class UpdateEventResponseDto {
   @Expose()
@@ -29,11 +28,11 @@ export class UpdateEventResponseDto {
   @IsInt()
   ageLimit?: number;
 
-  @Expose()
-  @IsArray()
-  @IsOptional()
-  @Type(() => EventDateDto)
-  eventDates?: EventDateDto[];
+  // @Expose()
+  // @IsArray()
+  // @IsOptional()
+  // @Type(() => EventDateDto)
+  // eventDates?: EventDateDto[];
 
   @Expose()
   @IsOptional()

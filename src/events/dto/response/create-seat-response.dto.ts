@@ -1,6 +1,5 @@
 import { Expose, Type } from 'class-transformer';
 import { IsDate, IsInt, IsString } from 'class-validator';
-import { EventDto } from './basic/event.dto';
 
 export class CreateSeatResponseDto {
   @Expose()
@@ -31,9 +30,9 @@ export class CreateSeatResponseDto {
   @IsInt()
   price: number;
 
-  @Expose()
-  @Type(() => EventDto)
-  event: EventDto;
+  // @Expose()
+  // @Type(() => EventDto)
+  // event: EventDto;
 
   @Expose()
   @IsDate()

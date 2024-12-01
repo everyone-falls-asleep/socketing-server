@@ -6,17 +6,19 @@ import { CommonResponse } from 'src/common/dto/common-response.dto';
 import { ERROR_CODES } from 'src/contants/error-codes';
 import { CustomException } from 'src/exceptions/custom-exception';
 import { plainToInstance, Transform } from 'class-transformer';
-import { CreateEventResponseDto } from './dto/create-event-response.dto';
-import { UpdateEventResponseDto } from './dto/update-event-response.dto';
 import { Seat } from './entities/seat.entity';
-import { CreateSeatResponseDto } from './dto/create-seat-response.dto';
-import { UpdateSeatResponseDto } from './dto/update-seat-response.dto';
 import { User } from 'src/users/entities/user.entity';
 import { UpdateEventRequestDto } from './dto/request/update-event-request.dto';
 import { CreateSeatRequestDto } from './dto/request/create-seat-request.dto';
 import { CreateEventRequestDto } from './dto/request/create-event-request.dto';
 import { UpdateSeatRequestDto } from './dto/request/update-seat-request.dto';
 import { Area } from './entities/area.entity';
+import { CreateEventResponseDto } from './dto/response/create-event-response.dto';
+import { UpdateEventResponseDto } from './dto/response/update-event-response.dto';
+import { CreateSeatResponseDto } from './dto/response/create-seat-response.dto';
+import { UpdateSeatResponseDto } from './dto/response/update-seat-response.dto';
+import { CreateManySeatRequestDto } from './dto/request/create-many-seat-request.dto';
+import { CreateManySeatResponseDto } from './dto/response/create-many-seat-response.dto';
 
 @Injectable()
 export class EventsService {
@@ -226,6 +228,69 @@ export class EventsService {
         excludeExtraneousValues: true,
       });
       return new CommonResponse(seatResponse);
+    } catch (e) {
+      if (e instanceof QueryFailedError && e.driverError.code === '23505') {
+        const duplicateError = ERROR_CODES.DUPLICATE_SEAT;
+        throw new CustomException(
+          duplicateError.code,
+          duplicateError.message,
+          duplicateError.httpStatus,
+        );
+      }
+      throw e;
+    }
+  }
+
+  async createManySeat(
+    eventId: string,
+    createManySeatRequestDto: CreateManySeatRequestDto,
+  ): Promise<CommonResponse<CreateManySeatResponseDto>> {
+    const event = await this.eventRepository.findOne({
+      where: { id: eventId },
+    });
+
+    if (!event) {
+      const error = ERROR_CODES.EVENT_NOT_FOUND;
+      throw new CustomException(error.code, error.message, error.httpStatus);
+    }
+
+    const { areas } = createManySeatRequestDto;
+
+    try {
+      const savedAreas = await Promise.all(
+        areas.map(async (area) => {
+          const newArea = this.areaRepository.create({
+            label: area.label,
+            price: area.price,
+            x: area.x,
+            y: area.y,
+            svg: area.svg,
+            event,
+          });
+          const savedArea = await this.areaRepository.save(newArea);
+
+          const seatEntities = area.seats.map((seat) =>
+            this.seatRepository.create({
+              ...seat,
+              area: savedArea,
+            }),
+          );
+
+          const savedSeats = await this.seatRepository.save(seatEntities);
+
+          return {
+            ...savedArea,
+            seats: savedSeats,
+          };
+        }),
+      );
+
+      const response = plainToInstance(CreateManySeatResponseDto, {
+        event,
+        areas: savedAreas,
+      });
+
+      return new CommonResponse(response);
     } catch (e) {
       if (e instanceof QueryFailedError && e.driverError.code === '23505') {
         const duplicateError = ERROR_CODES.DUPLICATE_SEAT;

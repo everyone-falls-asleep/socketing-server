@@ -17,11 +17,11 @@ export class Area {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // @Column('int', { unsigned: true })
-  // no: number;
-
   @Column({ type: 'text' })
   label: string;
+
+  @Column('int', { unsigned: true, default: 0 })
+  price: number;
 
   @Column('int')
   x: number;
@@ -31,9 +31,6 @@ export class Area {
 
   @Column({ type: 'text', nullable: true })
   svg?: string;
-
-  @Column('int', { unsigned: true, default: 0 })
-  price: number;
 
   @ManyToOne(() => Event, (event) => event.areas, { onDelete: 'CASCADE' })
   event: Event;

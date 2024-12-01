@@ -71,7 +71,6 @@ export class OrdersController {
                 number: 12,
                 area: {
                   id: '4b1b8400-e29b-41d4-a716-446655440006',
-                  no: 1,
                   label: 'R',
                   price: 150000,
                 },

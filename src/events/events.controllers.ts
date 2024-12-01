@@ -23,14 +23,16 @@ import {
 import { EventsService } from './events.service';
 import { CommonResponse } from 'src/common/dto/common-response.dto';
 import { CreateEventRequestDto } from './dto/request/create-event-request.dto';
-import { CreateEventResponseDto } from './dto/create-event-response.dto';
 import { UpdateEventRequestDto } from './dto/request/update-event-request.dto';
-import { UpdateEventResponseDto } from './dto/update-event-response.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { CreateSeatResponseDto } from './dto/create-seat-response.dto';
 import { CreateSeatRequestDto } from './dto/request/create-seat-request.dto';
 import { UpdateSeatRequestDto } from './dto/request/update-seat-request.dto';
-import { UpdateSeatResponseDto } from './dto/update-seat-response.dto';
+import { CreateManySeatRequestDto } from './dto/request/create-many-seat-request.dto';
+import { CreateManySeatResponseDto } from './dto/response/create-many-seat-response.dto';
+import { UpdateEventResponseDto } from './dto/response/update-event-response.dto';
+import { CreateEventResponseDto } from './dto/response/create-event-response.dto';
+import { CreateSeatResponseDto } from './dto/response/create-seat-response.dto';
+import { UpdateSeatResponseDto } from './dto/response/update-seat-response.dto';
 
 @ApiTags('Events')
 @Controller('events')
@@ -398,6 +400,177 @@ export class EventsController {
   @UseGuards(JwtAuthGuard)
   softDeleteEvent(@Param('id') id: string): Promise<void> {
     return this.eventService.softDeleteEvent(id);
+  }
+
+  @ApiOperation({
+    summary: 'Batch create seats for a specific event',
+    description:
+      'Create multiple seats in different areas for a specific event in a single request.',
+  })
+  @ApiBody({
+    description:
+      'The request body containing multiple areas with their respective seats',
+    type: CreateManySeatRequestDto,
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'The seat has been successfully created.',
+    schema: {
+      example: {
+        code: 0,
+        message: 'Success',
+        data: {
+          id: '550e8400-e29b-41d4-a716-446655440000',
+          title: 'The Phantom of the Opera',
+          description: 'A world-famous musical performance.',
+          createdAt: '2024-12-01T09:00:00.000Z',
+          updatedAt: '2024-12-01T09:00:00.000Z',
+          areas: [
+            {
+              id: '4b1b8400-e29b-41d4-a716-446655440001',
+              label: 'VIP',
+              price: 150000,
+              x: 100,
+              y: 50,
+              svg: '<svg>...</svg>',
+              createdAt: '2024-12-01T09:00:00.000Z',
+              updatedAt: '2024-12-01T09:00:00.000Z',
+              seats: [
+                {
+                  id: '5a1c8400-e29b-41d4-a716-446655440002',
+                  cx: 150,
+                  cy: 200,
+                  row: 1,
+                  number: 5,
+                  area: {
+                    id: '4b1b8400-e29b-41d4-a716-446655440001',
+                    label: 'VIP',
+                    price: 150000,
+                    x: 100,
+                    y: 50,
+                    svg: '<svg>...</svg>',
+                    createdAt: '2024-12-01T09:00:00.000Z',
+                    updatedAt: '2024-12-01T09:00:00.000Z',
+                  },
+                },
+                {
+                  id: '5a1c8400-e29b-41d4-a716-446655440003',
+                  cx: 160,
+                  cy: 210,
+                  row: 2,
+                  number: 10,
+                  area: {
+                    id: '4b1b8400-e29b-41d4-a716-446655440001',
+                    label: 'VIP',
+                    price: 150000,
+                    x: 100,
+                    y: 50,
+                    svg: '<svg>...</svg>',
+                    createdAt: '2024-12-01T09:00:00.000Z',
+                    updatedAt: '2024-12-01T09:00:00.000Z',
+                  },
+                },
+              ],
+            },
+            {
+              id: '4b1b8400-e29b-41d4-a716-446655440004',
+              label: 'General',
+              price: 100000,
+              x: 200,
+              y: 100,
+              svg: '<svg>...</svg>',
+              createdAt: '2024-12-01T09:00:00.000Z',
+              updatedAt: '2024-12-01T09:00:00.000Z',
+              seats: [
+                {
+                  id: '5a1c8400-e29b-41d4-a716-446655440005',
+                  cx: 250,
+                  cy: 300,
+                  row: 3,
+                  number: 15,
+                  area: {
+                    id: '4b1b8400-e29b-41d4-a716-446655440004',
+                    label: 'General',
+                    price: 100000,
+                    x: 200,
+                    y: 100,
+                    svg: '<svg>...</svg>',
+                    createdAt: '2024-12-01T09:00:00.000Z',
+                    updatedAt: '2024-12-01T09:00:00.000Z',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Validation error',
+    schema: {
+      example: {
+        code: 5,
+        message: 'Validation failed',
+        details: [
+          {
+            field: 'cx',
+            message: 'cx must be an integer number',
+          },
+        ],
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Token is invalid or missing',
+    schema: {
+      example: {
+        code: 8,
+        message: 'Unauthorized',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Event not found.',
+    schema: {
+      example: {
+        code: 9,
+        message: 'Event not found',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflict - Duplicate seat for the given event.',
+    schema: {
+      example: {
+        code: 10,
+        message:
+          'A seat with the same area, row, number, and event already exists.',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+    schema: {
+      example: {
+        code: 6,
+        message: 'Internal server error',
+      },
+    },
+  })
+  @Post(':id/seats/batch')
+  @HttpCode(201)
+  @UseGuards(JwtAuthGuard)
+  createManySeat(
+    @Param('id') eventId: string,
+    @Body() createManySeatRequestDto: CreateManySeatRequestDto,
+  ): Promise<CommonResponse<CreateManySeatResponseDto>> {
+    return this.eventService.createManySeat(eventId, createManySeatRequestDto);
   }
 
   @ApiOperation({ summary: 'Create a new seat for a specific event' })

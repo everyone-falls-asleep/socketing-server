@@ -1,6 +1,6 @@
 import { Expose, Type } from 'class-transformer';
 import { IsDate } from 'class-validator';
-import { EventDto } from './basic/event.dto';
+import { EventDto } from '../basic/event.dto';
 
 export class UpdateSeatResponseDto {
   @Expose()

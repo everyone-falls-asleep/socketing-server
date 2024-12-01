@@ -11,7 +11,7 @@ export class CreateSeatRequestDto {
   })
   @IsInt()
   cx: number;
-
+  z;
   @ApiProperty({
     description: 'Y-coordinate of the seat',
     example: 50,
@@ -29,7 +29,7 @@ export class CreateSeatRequestDto {
   row: number;
 
   @ApiProperty({
-    description: 'Number of the seat within the row',
+    description: 'Number of the seat',
     example: 2,
     type: Number,
   })
