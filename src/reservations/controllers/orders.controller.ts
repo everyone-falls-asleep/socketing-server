@@ -135,10 +135,10 @@ export class OrdersController {
   @HttpCode(201)
   @UseGuards(JwtAuthGuard)
   create(
-    @Body() createorderRequestDto: CreateOrderRequestDto,
+    @Body() body: any,
     @Req() req,
   ): Promise<CommonResponse<CreateOrderResponseDto>> {
     const { userId } = req.user;
-    return this.orderService.createOrder(createorderRequestDto, userId);
+    return this.orderService.createOrder(body, userId);
   }
 }

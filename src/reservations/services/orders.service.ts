@@ -38,10 +38,10 @@ export class OrdersService {
   ) {}
 
   async createOrder(
-    createOrderRequestDto: CreateOrderRequestDto,
+    body: CreateOrderRequestDto,
     userId: string,
   ): Promise<CommonResponse<CreateOrderResponseDto>> {
-    const { eventId, eventDateId, seatIds } = createOrderRequestDto;
+    const { eventId, eventDateId, seatIds } = body;
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.startTransaction();
