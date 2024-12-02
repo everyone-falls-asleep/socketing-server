@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   HttpCode,
+  Patch,
   Post,
   Req,
   UseGuards,
@@ -14,9 +15,11 @@ import {
 } from '@nestjs/swagger';
 import { PaymentsService } from '../services/payments.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { CreatePaymentRequestDto } from 'src/events/dto/request/create-payment-request.dto';
+import { CreatePaymentRequestDto } from 'src/reservations/dto/request/create-payment-request.dto';
 import { CreatePaymentResponseDto } from 'src/events/dto/response/create-payment-response.dto';
 import { CommonResponse } from 'src/common/dto/common-response.dto';
+import { UpdatePaymentRequestDto } from '../dto/request/update-payment-request.dto';
+import { UpdatePaymentResponseDto } from '../dto/response/update-payment-response.dto';
 
 @ApiTags('Payments')
 @Controller('payments')
@@ -35,99 +38,29 @@ export class PaymentsController {
         code: 0,
         message: 'Success',
         data: {
+          user: {
+            id: '4550a86f-8d98-4ab7-802a-b3f8d31412e2',
+            nickname: '냉철한금빛양치기',
+            email: 'jeein@jungle.com',
+            profileImage: null,
+            role: 'user',
+          },
           order: {
-            id: 'order-id-123',
-            createdAt: '2024-12-01T10:00:00.000Z',
-            updatedAt: '2024-12-01T10:00:00.000Z',
+            id: 'a7cb77c7-616e-45d7-82a2-8eb7990cf7ce',
+            createdAt: '2024-12-01T15:44:19.209Z',
+            updatedAt: '2024-12-01T15:44:19.209Z',
+            deletedAt: null,
           },
           payment: {
-            id: 'payment-id-123',
-            paymentAmount: 150.0,
+            id: '8a0829d9-e3af-444b-8d8b-2775943a8dcd',
+            createdAt: '2024-12-01T16:43:34.116Z',
+            updatedAt: '2024-12-01T16:43:34.116Z',
+            deletedAt: null,
+            paymentAmount: '150000',
             paymentMethod: 'socket_pay',
-            paymentStatus: 'PENDING',
+            paymentStatus: 'pending',
             paidAt: null,
-            createdAt: '2024-12-01T10:00:00.000Z',
-            updatedAt: '2024-12-01T10:00:00.000Z',
           },
-          user: {
-            id: 'user-id-123',
-            nickname: '우아한하늘빛양치기',
-            email: 'johndoe@example.com',
-            profileImage: 'https://example.com/profile-images/default.png',
-            role: 'user',
-            createdAt: '2024-11-12T12:00:00.000Z',
-            updatedAt: '2024-11-12T12:00:00.000Z',
-          },
-          reservations: [
-            {
-              id: 'reservation-id-1',
-              eventDate: {
-                id: 'event-date-id-123',
-                date: '2024-12-25T19:30:00.000Z',
-                event: {
-                  id: 'event-id-123',
-                  title: 'The Phantom of the Opera',
-                  thumbnail: 'https://example.com/phantom.jpg',
-                  place: 'Seoul Arts Center',
-                  cast: 'Kim Min-ji, Lee Jung-ho',
-                  ageLimit: 12,
-                  ticketingStartTime: '2024-11-01T10:00:00.000Z',
-                  createdAt: '2024-10-01T09:00:00.000Z',
-                  updatedAt: '2024-10-01T09:00:00.000Z',
-                },
-              },
-              seat: {
-                id: 'seat-id-1',
-                cx: 150,
-                cy: 200,
-                row: 1,
-                number: 5,
-                area: {
-                  id: 'area-id-1',
-                  label: 'VIP',
-                  price: 100,
-                  createdAt: '2024-11-01T12:00:00.000Z',
-                  updatedAt: '2024-11-01T12:00:00.000Z',
-                },
-                createdAt: '2024-11-01T12:00:00.000Z',
-                updatedAt: '2024-11-01T12:00:00.000Z',
-              },
-            },
-            {
-              id: 'reservation-id-2',
-              eventDate: {
-                id: 'event-date-id-124',
-                date: '2024-12-25T19:30:00.000Z',
-                event: {
-                  id: 'event-id-124',
-                  title: 'Les Misérables',
-                  thumbnail: 'https://example.com/lesmis.jpg',
-                  place: 'Seoul Arts Center',
-                  cast: 'Kim Min-ji, Lee Jung-ho',
-                  ageLimit: 12,
-                  ticketingStartTime: '2024-11-01T10:00:00.000Z',
-                  createdAt: '2024-10-01T09:00:00.000Z',
-                  updatedAt: '2024-10-01T09:00:00.000Z',
-                },
-              },
-              seat: {
-                id: 'seat-id-2',
-                cx: 160,
-                cy: 210,
-                row: 2,
-                number: 10,
-                area: {
-                  id: 'area-id-2',
-                  label: 'General',
-                  price: 150,
-                  createdAt: '2024-11-01T12:00:00.000Z',
-                  updatedAt: '2024-11-01T12:00:00.000Z',
-                },
-                createdAt: '2024-11-01T12:00:00.000Z',
-                updatedAt: '2024-11-01T12:00:00.000Z',
-              },
-            },
-          ],
         },
       },
     },
@@ -161,10 +94,78 @@ export class PaymentsController {
   @HttpCode(201)
   @UseGuards(JwtAuthGuard)
   create(
-    @Body() createPaymentRequestDto: CreatePaymentRequestDto,
+    @Body() body: CreatePaymentRequestDto,
     @Req() req,
   ): Promise<CommonResponse<CreatePaymentResponseDto>> {
     const { userId } = req.user;
-    return this.paymentService.createPayment(createPaymentRequestDto, userId);
+    return this.paymentService.createPayment(body, userId);
+  }
+
+  @ApiOperation({
+    summary: 'Update a payment',
+    description: 'Update a payment for an order',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Payment successfully updated',
+    schema: {
+      example: {
+        code: 0,
+        message: 'Success',
+        data: {
+          payment: {
+            id: '6780b35f-5b9f-4106-a39f-f57d968a12c3',
+            createdAt: '2024-12-01T16:23:12.565Z',
+            updatedAt: '2024-12-01T17:35:52.069Z',
+            deletedAt: null,
+            paymentAmount: 0,
+            paymentMethod: 'socket_pay',
+            paymentStatus: 'completed',
+            paidAt: null,
+          },
+          order: {
+            id: '40818a9b-b1a6-40f7-aee8-b4a9c04ec972',
+            createdAt: '2024-12-01T15:33:24.671Z',
+            updatedAt: '2024-12-01T15:33:24.671Z',
+            deletedAt: null,
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Token is invalid or missing',
+    schema: {
+      example: {
+        code: 8,
+        message: 'Unauthorized',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 409,
+    //
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+    schema: {
+      example: {
+        code: 6,
+        message: 'Internal server error',
+      },
+    },
+  })
+  @ApiBearerAuth()
+  @Patch()
+  @HttpCode(201)
+  @UseGuards(JwtAuthGuard)
+  update(
+    @Body() body: UpdatePaymentRequestDto,
+    @Req() req,
+  ): Promise<CommonResponse<UpdatePaymentResponseDto>> {
+    const { userId } = req.user;
+    return this.paymentService.updatePayment(body, userId);
   }
 }

@@ -1,12 +1,15 @@
 import { Expose } from 'class-transformer';
 
 export class BaseDto {
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose()
   id: string;
 
-  @Expose({ groups: ['detailed'] })
+  @Expose()
   createdAt: Date;
 
-  @Expose({ groups: ['detailed'] })
+  @Expose()
   updatedAt: Date;
+
+  @Expose()
+  deletedAt: Date;
 }

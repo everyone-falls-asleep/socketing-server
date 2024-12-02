@@ -1,7 +1,10 @@
 import { Expose } from 'class-transformer';
 import { BaseDto } from 'src/common/dto/base.dto';
 
-export class EventDto extends BaseDto {
+export class EventBasicDto extends BaseDto {
+  @Expose()
+  id: string;
+
   @Expose()
   title: string;
 
@@ -16,9 +19,6 @@ export class EventDto extends BaseDto {
 
   @Expose()
   ageLimit?: number;
-
-  @Expose()
-  svg?: string;
 
   @Expose()
   ticketingStartTime?: Date;

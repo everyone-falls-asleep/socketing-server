@@ -28,7 +28,7 @@ export class Payment {
   @Column()
   orderId: string;
 
-  @Column('decimal', { precision: 10, scale: 2, default: 0 })
+  @Column({ type: 'int', unsigned: true, default: 0 })
   paymentAmount: number;
 
   @Column({

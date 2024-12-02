@@ -23,12 +23,6 @@ export class Area {
   @Column('int', { unsigned: true, default: 0, nullable: true })
   price: number | null;
 
-  @Column('int', { nullable: true })
-  x: number | null;
-
-  @Column('int', { nullable: true })
-  y: number | null;
-
   @Column({ type: 'text', nullable: true })
   svg: string | null;
 

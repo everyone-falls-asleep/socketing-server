@@ -15,8 +15,8 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CommonResponse } from 'src/common/dto/common-response.dto';
 import { OrdersService } from '../services/orders.service';
-import { CreateOrderRequestDto } from '../dto/request/create-order-request.dto';
 import { CreateOrderResponseDto } from '../dto/response/create-order-response.dto';
+import { CreateOrderRequestDto } from '../dto/request/create-order-request.dto';
 
 @ApiTags('Orders')
 @Controller('orders')
@@ -35,70 +35,34 @@ export class OrdersController {
         code: 0,
         message: 'Success',
         data: {
-          order: {
-            id: 'order-id-123',
-            totalAmount: 250,
-            user: {
-              id: 'userid-123',
-              nickname: '우아한하늘빛양치기',
-              email: 'johndoe@example.com',
-              profileImage: 'https://example.com/profile-images/default.png',
-              role: 'user',
-              createdAt: '2024-11-12T12:00:00.000Z',
-              updatedAt: '2024-11-12T12:00:00.000Z',
-              point: 1000,
-            },
-            createdAt: '2024-12-01T12:00:00.000Z',
-            updatedAt: '2024-12-01T12:00:00.000Z',
+          id: '11842857-0a7e-4221-9288-c4c72a0c4d44',
+          createdAt: '2024-12-01T16:12:01.554Z',
+          totalAmount: 30000,
+          user: {
+            nickname: '냉철한금빛양치기',
+            email: 'jeein@jungle.com',
+            profileImage: 'https://profile.jpg',
+            role: 'user',
           },
           event: {
-            id: 'event-id-123',
-            title: 'The Phantom of the Opera',
-            thumbnail: 'https://example.com/phantom.jpg',
-            place: 'Seoul Arts Center',
-            cast: 'Kim Min-ji, Lee Jung-ho',
+            title: '최지인 테스트',
+            thumbnail:
+              'https://swjungle.net/static/hub/images/kaist_jungle_logo.png',
+            place: '카이스트 문지캠퍼스 강의동 407호',
+            cast: '정글 9기',
             ageLimit: 12,
-            ticketingStartTime: '2024-11-01T10:00:00.000Z',
-            createdAt: '2024-10-01T09:00:00.000Z',
-            updatedAt: '2024-10-01T09:00:00.000Z',
+            ticketingStartTime: '2024-11-30T09:54:00.000Z',
           },
           reservations: [
             {
-              id: 'reservation-id-1',
+              id: 'f2fa89f1-7474-452e-bfe5-a14832aa6c7f',
               seat: {
-                id: 'seat-id-1',
-                cx: 150,
-                cy: 200,
-                row: 1,
-                number: 5,
+                row: 9,
+                number: 2,
                 area: {
-                  id: 'area-id-1',
-                  label: 'VIP',
-                  price: 100,
-                  createdAt: '2024-11-01T12:00:00.000Z',
-                  updatedAt: '2024-11-01T12:00:00.000Z',
+                  label: 'A',
+                  price: 30000,
                 },
-                createdAt: '2024-11-01T12:00:00.000Z',
-                updatedAt: '2024-11-01T12:00:00.000Z',
-              },
-            },
-            {
-              id: 'reservation-id-2',
-              seat: {
-                id: 'seat-id-2',
-                cx: 160,
-                cy: 210,
-                row: 2,
-                number: 10,
-                area: {
-                  id: 'area-id-2',
-                  label: 'General',
-                  price: 150,
-                  createdAt: '2024-11-01T12:00:00.000Z',
-                  updatedAt: '2024-11-01T12:00:00.000Z',
-                },
-                createdAt: '2024-11-01T12:00:00.000Z',
-                updatedAt: '2024-11-01T12:00:00.000Z',
               },
             },
           ],
@@ -135,7 +99,7 @@ export class OrdersController {
   @HttpCode(201)
   @UseGuards(JwtAuthGuard)
   create(
-    @Body() body: any,
+    @Body() body: CreateOrderRequestDto,
     @Req() req,
   ): Promise<CommonResponse<CreateOrderResponseDto>> {
     const { userId } = req.user;

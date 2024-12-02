@@ -32,11 +32,13 @@ export class Order {
   user: User;
 
   @OneToMany(() => Reservation, (reservation) => reservation.order, {
+    cascade: true,
     onDelete: 'CASCADE',
   })
   reservations: Reservation[];
 
-  @OneToMany(() => Order, (order) => order.payments, {
+  @OneToMany(() => Payment, (payment) => payment.order, {
+    cascade: true,
     onDelete: 'CASCADE',
   })
   payments: Payment[];

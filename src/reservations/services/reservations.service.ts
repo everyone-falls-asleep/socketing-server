@@ -1,15 +1,19 @@
 import { CommonResponse } from 'src/common/dto/common-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Reservation } from '../entities/reservation.entity';
 import { User } from 'src/users/entities/user.entity';
 import { EventDate } from 'src/events/entities/event-date.entity';
 import { Seat } from 'src/events/entities/seat.entity';
 import { QueryFailedError, Repository } from 'typeorm';
 import { ERROR_CODES } from 'src/contants/error-codes';
 import { CustomException } from 'src/exceptions/custom-exception';
+import { plainToInstance } from 'class-transformer';
 import { Injectable } from '@nestjs/common';
+import { Reservation } from '../entities/reservation.entity';
 import { CreateReservationRequestDto } from '../dto/request/create-reservation-request.dto';
 import { CreateReservationResponseDto } from '../dto/response/create-reservation-response.dto';
+import { EventDateDto } from 'src/events/dto/basic/event-date-dto';
+import { FindAllReservationRequestDto } from '../dto/request/find-all-reservation-request.dto';
+import { FindAllReservationResponseDto } from '../dto/response/find-all-reservation-response.dto';
 
 @Injectable()
 export class ReservationsService {
@@ -46,8 +50,8 @@ export class ReservationsService {
     // }
 
     // const seat = await this.seatRepository.findOne({
-    //   // where: { id: seatId, event: { id: eventId } },
-    //   // relations: ['event'],
+    //   where: { id: seatId, event: { id: eventId } },
+    //   relations: ['event'],
     // });
     // if (!seat) {
     //   const error = ERROR_CODES.SEAT_NOT_FOUND;
@@ -55,7 +59,7 @@ export class ReservationsService {
     // }
 
     // const newReservation = this.reservationRepository.create({
-    //   // user,
+    //   user,
     //   eventDate,
     //   seat,
     // });
@@ -64,172 +68,171 @@ export class ReservationsService {
     //   const savedReservation =
     //     await this.reservationRepository.save(newReservation);
 
-    // const reservationResponse = plainToInstance(
-    //   CreateReservationResponseDto,
-    //   savedReservation,
-    //   {
-    //     groups: ['detailed'],
-    //     excludeExtraneousValues: true,
-    //   },
-    // );
+    //   const reservationResponse = plainToInstance(
+    //     CreateReservationResponseDto,
+    //     savedReservation,
+    //     {
+    //       excludeExtraneousValues: true,
+    //     },
+    //   );
 
-    // reservationResponse.eventDate = plainToInstance(
-    //   EventDateDto,
-    //   savedReservation.eventDate,
-    //   {
-    //     groups: ['basic'],
-    //     excludeExtraneousValues: true,
-    //   },
-    // );
+    //   reservationResponse.eventDate = plainToInstance(
+    //     EventDateDto,
+    //     savedReservation.eventDate,
+    //     {
+    //       excludeExtraneousValues: true,
+    //     },
+    //   );
 
-    // reservationResponse.seat = plainToInstance(
-    //   SeatDto,
-    //   savedReservation.seat,
-    //   {
-    //     groups: ['basic'],
-    //     excludeExtraneousValues: true,
-    //   },
-    // );
+    //   reservationResponse.seat = plainToInstance(
+    //     SeatDto,
+    //     savedReservation.seat,
+    //     {
+    //       excludeExtraneousValues: true,
+    //     },
+    //   );
 
-    // reservationResponse.user = plainToInstance(
-    //   UserDto,
-    //   savedReservation.user,
-    //   {
-    //     groups: ['basic'],
-    //     excludeExtraneousValues: true,
-    //   },
-    // );
+    //   reservationResponse.user = plainToInstance(
+    //     UserDto,
+    //     savedReservation.user,
+    //     {
+    //       excludeExtraneousValues: true,
+    //     },
+    //   );
 
-    // return new CommonResponse(reservationResponse);
+    //   return new CommonResponse(reservationResponse);
+    // } catch (e) {
+    //   if (e instanceof QueryFailedError && e.driverError.code === '23505') {
+    //     const uniqueError = ERROR_CODES.EXISTING_RESERVATION;
+    //     throw new CustomException(
+    //       uniqueError.code,
+    //       uniqueError.message,
+    //       uniqueError.httpStatus,
+    //     );
+    //   }
+    //   throw e;
+    // }
     return;
   }
-  catch(e) {
-    if (e instanceof QueryFailedError && e.driverError.code === '23505') {
-      const uniqueError = ERROR_CODES.EXISTING_RESERVATION;
-      throw new CustomException(
-        uniqueError.code,
-        uniqueError.message,
-        uniqueError.httpStatus,
-      );
-    }
-    throw e;
+
+  async findAllReservation(
+    findAllReservationRequestDto: FindAllReservationRequestDto,
+    userId: string,
+  ): Promise<CommonResponse<FindAllReservationResponseDto[]>> {
+    //   const { eventId } = findAllReservationRequestDto;
+
+    //   const queryBuilder = this.reservationRepository
+    //     .createQueryBuilder('reservation')
+    //     .innerJoinAndSelect('reservation.user', 'user')
+    //     .innerJoinAndSelect('reservation.eventDate', 'eventDate')
+    //     .innerJoinAndSelect('eventDate.event', 'event')
+    //     .innerJoinAndSelect('reservation.seat', 'seat')
+    //     .innerJoinAndSelect('seat.event', 'seatEvent')
+    //     .andWhere('user.id = :userId', { userId });
+
+    //   if (eventId) {
+    //     queryBuilder.andWhere('event.id = :eventId', { eventId });
+    //   }
+
+    //   const reservations = await queryBuilder
+    //     .select([
+    //       'reservation.id',
+    //       'user.id',
+    //       'user.nickname',
+    //       'user.email',
+    //       'user.profileImage',
+    //       'user.role',
+    //       'eventDate.id',
+    //       'eventDate.date',
+    //       'event.id',
+    //       'event.title',
+    //       'event.thumbnail',
+    //       'event.place',
+    //       'event.cast',
+    //       'event.ageLimit',
+    //       'seat.id',
+    //       'seat.cx',
+    //       'seat.cy',
+    //       'seat.area',
+    //       'seat.row',
+    //       'seat.number',
+    //       'reservation.createdAt',
+    //       'reservation.updatedAt',
+    //     ])
+    //     .getMany();
+
+    //   return new CommonResponse(reservations);
+    return;
   }
 
-  // async findAllReservation(
-  //   findAllReservationRequestDto: FindAllReservationRequestDto,
-  //   userId: string,
-  // ): Promise<CommonResponse<FindAllReservationResponseDto[]>> {
-  //   const { eventId } = findAllReservationRequestDto;
+  async findOneReservation(
+    reservationId: string,
+    userId: string,
+  ): Promise<any> {
+    //   const reservation = await this.reservationRepository
+    //     .createQueryBuilder('reservation')
+    //     .innerJoinAndSelect('reservation.user', 'user')
+    //     .innerJoinAndSelect('reservation.eventDate', 'eventDate')
+    //     .innerJoinAndSelect('eventDate.event', 'event')
+    //     .innerJoinAndSelect('reservation.seat', 'seat')
+    //     .innerJoinAndSelect('seat.event', 'seatEvent')
+    //     .where('reservation.id = :reservationId', { reservationId })
+    //     .andWhere('user.id = :userId', { userId })
+    //     .select([
+    //       'reservation.id',
+    //       'user.id',
+    //       'user.nickname',
+    //       'user.email',
+    //       'user.profileImage',
+    //       'user.role',
+    //       'eventDate.id',
+    //       'eventDate.date',
+    //       'event.id',
+    //       'event.title',
+    //       'event.thumbnail',
+    //       'event.place',
+    //       'event.cast',
+    //       'event.ageLimit',
+    //       'seat.id',
+    //       'seat.cx',
+    //       'seat.cy',
+    //       'seat.area',
+    //       'seat.row',
+    //       'seat.number',
+    //       'reservation.createdAt',
+    //       'reservation.updatedAt',
+    //     ])
+    //     .getOne();
 
-  //   const queryBuilder = this.reservationRepository
-  //     .createQueryBuilder('reservation')
-  //     .innerJoinAndSelect('reservation.user', 'user')
-  //     .innerJoinAndSelect('reservation.eventDate', 'eventDate')
-  //     .innerJoinAndSelect('eventDate.event', 'event')
-  //     .innerJoinAndSelect('reservation.seat', 'seat')
-  //     .innerJoinAndSelect('seat.event', 'seatEvent')
-  //     .andWhere('user.id = :userId', { userId });
+    //   if (!reservation) {
+    //     throw new CustomException(
+    //       ERROR_CODES.RESERVATION_NOT_FOUND.code,
+    //       ERROR_CODES.RESERVATION_NOT_FOUND.message,
+    //       ERROR_CODES.RESERVATION_NOT_FOUND.httpStatus,
+    //     );
+    //   }
 
-  //   if (eventId) {
-  //     queryBuilder.andWhere('event.id = :eventId', { eventId });
-  //   }
+    //   return new CommonResponse(reservation);
+    return;
+  }
 
-  //   const reservations = await queryBuilder
-  //     .select([
-  //       'reservation.id',
-  //       'user.id',
-  //       'user.nickname',
-  //       'user.email',
-  //       'user.profileImage',
-  //       'user.role',
-  //       'eventDate.id',
-  //       'eventDate.date',
-  //       'event.id',
-  //       'event.title',
-  //       'event.thumbnail',
-  //       'event.place',
-  //       'event.cast',
-  //       'event.ageLimit',
-  //       'seat.id',
-  //       'seat.cx',
-  //       'seat.cy',
-  //       'seat.area',
-  //       'seat.row',
-  //       'seat.number',
-  //       'reservation.createdAt',
-  //       'reservation.updatedAt',
-  //     ])
-  //     .getMany();
+  async softDeleteReservation(reservationId: string, userId: string) {
+    // const reservation = await this.reservationRepository
+    //   .createQueryBuilder('reservation')
+    //   .innerJoin('reservation.user', 'user')
+    //   .where('reservation.id = :reservationId', { reservationId })
+    //   .andWhere('user.id = :userId', { userId })
+    //   .getOne();
 
-  //   return new CommonResponse(reservations);
-  // }
+    // if (!reservation) {
+    //   throw new CustomException(
+    //     ERROR_CODES.RESERVATION_NOT_FOUND.code,
+    //     ERROR_CODES.RESERVATION_NOT_FOUND.message,
+    //     ERROR_CODES.RESERVATION_NOT_FOUND.httpStatus,
+    //   );
+    // }
 
-  // async findOneReservation(
-  //   reservationId: string,
-  //   userId: string,
-  // ): Promise<any> {
-  //   const reservation = await this.reservationRepository
-  //     .createQueryBuilder('reservation')
-  //     .innerJoinAndSelect('reservation.user', 'user')
-  //     .innerJoinAndSelect('reservation.eventDate', 'eventDate')
-  //     .innerJoinAndSelect('eventDate.event', 'event')
-  //     .innerJoinAndSelect('reservation.seat', 'seat')
-  //     .innerJoinAndSelect('seat.event', 'seatEvent')
-  //     .where('reservation.id = :reservationId', { reservationId })
-  //     .andWhere('user.id = :userId', { userId })
-  //     .select([
-  //       'reservation.id',
-  //       'user.id',
-  //       'user.nickname',
-  //       'user.email',
-  //       'user.profileImage',
-  //       'user.role',
-  //       'eventDate.id',
-  //       'eventDate.date',
-  //       'event.id',
-  //       'event.title',
-  //       'event.thumbnail',
-  //       'event.place',
-  //       'event.cast',
-  //       'event.ageLimit',
-  //       'seat.id',
-  //       'seat.cx',
-  //       'seat.cy',
-  //       'seat.area',
-  //       'seat.row',
-  //       'seat.number',
-  //       'reservation.createdAt',
-  //       'reservation.updatedAt',
-  //     ])
-  //     .getOne();
-
-  //   if (!reservation) {
-  //     throw new CustomException(
-  //       ERROR_CODES.RESERVATION_NOT_FOUND.code,
-  //       ERROR_CODES.RESERVATION_NOT_FOUND.message,
-  //       ERROR_CODES.RESERVATION_NOT_FOUND.httpStatus,
-  //     );
-  //   }
-
-  //   return new CommonResponse(reservation);
-  // }
-
-  // async softDeleteReservation(reservationId: string, userId: string) {
-  //   const reservation = await this.reservationRepository
-  //     .createQueryBuilder('reservation')
-  //     .innerJoin('reservation.user', 'user')
-  //     .where('reservation.id = :reservationId', { reservationId })
-  //     .andWhere('user.id = :userId', { userId })
-  //     .getOne();
-
-  //   if (!reservation) {
-  //     throw new CustomException(
-  //       ERROR_CODES.RESERVATION_NOT_FOUND.code,
-  //       ERROR_CODES.RESERVATION_NOT_FOUND.message,
-  //       ERROR_CODES.RESERVATION_NOT_FOUND.httpStatus,
-  //     );
-  //   }
-
-  //   await this.reservationRepository.softRemove(reservation);
-  // }
+    // await this.reservationRepository.softRemove(reservation);
+    return;
+  }
 }

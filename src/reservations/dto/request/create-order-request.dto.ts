@@ -1,22 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty } from 'class-validator';
+import { IsArray, IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateOrderRequestDto {
   @ApiProperty({
     description: 'The UUID of the event for the reservation',
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
-  @IsNotEmpty()
-  @IsInt()
-  readonly eventId: string;
+  @IsString()
+  eventId: string;
 
   @ApiProperty({
     description: 'The UUID of the event date for the reservation',
     example: '223e4567-e89b-12d3-a456-426614174001',
   })
-  @IsNotEmpty()
-  @IsInt()
-  readonly eventDateId: string;
+  @IsString()
+  eventDateId: string;
 
   @ApiProperty({
     description: 'The UUID list of the seats being reserved',
@@ -25,9 +23,7 @@ export class CreateOrderRequestDto {
       '323e4567-e89b-12d3-a456-426614174003',
     ],
     isArray: true,
-    type: String,
   })
-  @IsNotEmpty()
-  @IsInt()
-  readonly seatIds: string[];
+  @IsArray()
+  seatIds: string[];
 }

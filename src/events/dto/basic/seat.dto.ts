@@ -2,6 +2,7 @@ import { Expose, Type } from 'class-transformer';
 import { BaseDto } from 'src/common/dto/base.dto';
 import { AreaDto } from './area.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsInt } from 'class-validator';
 
 export class SeatDto extends BaseDto {
   @ApiProperty({
@@ -9,7 +10,7 @@ export class SeatDto extends BaseDto {
     example: 100,
     type: Number,
   })
-  @Expose({ groups: ['basic', 'detailed'] })
+  @IsInt()
   cx: number;
 
   @ApiProperty({
@@ -17,23 +18,15 @@ export class SeatDto extends BaseDto {
     example: 50,
     type: Number,
   })
-  @Expose({ groups: ['basic', 'detailed'] })
+  @IsInt()
   cy: number;
-
-  @ApiProperty({
-    description: 'Area information for the seat',
-    type: () => AreaDto,
-  })
-  @Expose({ groups: ['basic', 'detailed'] })
-  @Type(() => AreaDto)
-  area: AreaDto;
 
   @ApiProperty({
     description: 'Row number of the seat',
     example: 1,
     type: Number,
   })
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose()
   row: number;
 
   @ApiProperty({
@@ -41,8 +34,16 @@ export class SeatDto extends BaseDto {
     example: 2,
     type: Number,
   })
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose()
   number: number;
+
+  @ApiProperty({
+    description: 'Area information for the seat',
+    type: () => AreaDto,
+  })
+  @Expose()
+  @Type(() => AreaDto)
+  area: AreaDto;
 
   // @Expose({ groups: ['basic', 'detailed'] })
   // @Type(() => ReservationDto)

@@ -1,22 +1,19 @@
 import { Expose } from 'class-transformer';
 import { BaseDto } from 'src/common/dto/base.dto';
 
-export class UserDto extends BaseDto {
-  @Expose({ groups: ['basic', 'detailed'] })
+export class UserDto {
+  @Expose()
+  id: string;
+
+  @Expose()
   nickname: string;
 
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose()
   email: string;
 
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose()
   profileImage: string;
 
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose()
   role: string;
-
-  @Expose({ groups: ['admin'] })
-  password: string;
-
-  @Expose({ groups: ['admin'] })
-  salt: string;
 }

@@ -10,19 +10,19 @@ export class PaymentDto extends BaseDto {
   // @Type(() => UserDto)
   // user: UserDto;
 
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose()
   @IsInt()
   paymentAmount: number;
 
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose()
   @IsEnum(PaymentMethod)
   paymentMethod: PaymentMethod;
 
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose()
   @IsEnum(PaymentStatus)
   paymentStatus: PaymentStatus;
 
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose()
   @IsOptional()
   paidAt?: Date | null;
 }

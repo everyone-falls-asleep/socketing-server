@@ -4,11 +4,11 @@ import { SeatDto } from 'src/events/dto/basic/seat.dto';
 import { BaseDto } from 'src/common/dto/base.dto';
 
 export class ReservationDto extends BaseDto {
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose()
   @Type(() => EventDateDto)
   eventDate: EventDateDto;
 
-  @Expose({ groups: ['basic', 'detailed'] })
+  @Expose()
   @Type(() => SeatDto)
   seat: SeatDto;
 

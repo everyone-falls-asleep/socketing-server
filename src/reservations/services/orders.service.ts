@@ -15,11 +15,12 @@ import { plainToInstance } from 'class-transformer';
 import { ReservationDto } from '../dto/base/reservation.dto';
 import { CreateOrderResponseDto } from '../dto/response/create-order-response.dto';
 import { UserDto } from 'src/users/dto/base/user.dto';
-import {
-  CreateOrderUser,
-  OrderWithDetailsDto,
-} from '../dto/order-with-details.dto';
+import { OrderWithDetailsDto } from '../dto/order-with-details.dto';
 import { ReservationWithSeatDetailsDto } from 'src/events/dto/reservation-with-seat-details.dto';
+import { UserWithPoint } from 'src/users/dto/user-with-point.dto';
+import { EventDto } from 'src/events/dto/basic/event.dto';
+import { SeatDto } from 'src/events/dto/basic/seat.dto';
+import { EventBasicDto } from 'src/events/dto/event-basic-dto';
 
 @Injectable()
 export class OrdersService {
@@ -41,6 +42,7 @@ export class OrdersService {
     body: CreateOrderRequestDto,
     userId: string,
   ): Promise<CommonResponse<CreateOrderResponseDto>> {
+    console.log(body);
     const { eventId, eventDateId, seatIds } = body;
 
     const queryRunner = this.dataSource.createQueryRunner();
@@ -60,6 +62,7 @@ export class OrdersService {
       const error = ERROR_CODES.EVENT_DATE_NOT_FOUND;
       throw new CustomException(error.code, error.message, error.httpStatus);
     }
+    console.log(eventDate.event);
 
     const seats = await this.seatRepository.find({
       where: { id: In(seatIds) },
@@ -72,6 +75,8 @@ export class OrdersService {
       );
       throw new Error(`Seats not found for IDs: ${missingSeatIds.join(', ')}`);
     }
+
+    // 이미 존재하는 주문인지 예외 코드 추가하기!
 
     const totalAmount = seats.reduce((sum, seat) => sum + seat.area.price, 0);
 
@@ -92,43 +97,37 @@ export class OrdersService {
 
       const savedOrder = await this.orderRepository.save(newOrder);
 
-      const userResponse = plainToInstance(CreateOrderUser, user, {
+      const userInstance = plainToInstance(UserWithPoint, user, {
         excludeExtraneousValues: true,
       });
 
-      const orderWithDetails = plainToInstance(
-        OrderWithDetailsDto,
-        {
-          ...savedOrder,
-          totalAmount,
-          user: userResponse,
-        },
+      const eventIstance = plainToInstance(EventBasicDto, eventDate.event, {
+        excludeExtraneousValues: true,
+      });
+      console.log(eventIstance);
+
+      const reservationInstances = plainToInstance(
+        ReservationWithSeatDetailsDto,
+        savedOrder.reservations.map((reservation) => ({
+          id: reservation.id,
+          seat: plainToInstance(SeatDto, reservation.seat, {
+            excludeExtraneousValues: true,
+          }),
+        })),
         {
           excludeExtraneousValues: true,
         },
       );
-
-      const reservationResponse = savedOrder.reservations.map((reservation) => {
-        const { id, eventDate, seat } = reservation;
-
-        return plainToInstance(
-          ReservationWithSeatDetailsDto,
-          {
-            id,
-            seat,
-          },
-          {
-            excludeExtraneousValues: true,
-          },
-        );
-      });
+      console.log(reservationInstances);
 
       const orderResponse = plainToInstance(
         CreateOrderResponseDto,
         {
-          order: orderWithDetails,
-          event: eventDate.event,
-          reservations: reservationResponse,
+          ...savedOrder,
+          totalAmount,
+          user: userInstance,
+          event: eventIstance,
+          reservations: reservationInstances,
         },
         {
           excludeExtraneousValues: true,

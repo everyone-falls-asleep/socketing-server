@@ -7,12 +7,12 @@ import { Seat } from 'src/events/entities/seat.entity';
 import { EventDate } from 'src/events/entities/event-date.entity';
 import { Area } from 'src/events/entities/area.entity';
 import { Order } from './entities/order.entity';
-import { ReservationsController } from './controllers/reservations.controller';
 import { OrdersController } from './controllers/orders.controller';
 import { OrdersService } from './services/orders.service';
 import { Payment } from './entities/payment.entity';
 import { PaymentsController } from './controllers/payments.controller';
 import { PaymentsService } from './services/payments.service';
+import { ReservationsController } from './controllers/reservations.controller';
 
 @Module({
   imports: [
