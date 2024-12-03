@@ -44,7 +44,7 @@ export class User {
   })
   events: Event[];
 
-  @Column()
+  @Column({ type: 'int', unsigned: true, nullable: true })
   point: number;
 
   @CreateDateColumn({ type: 'timestamp' })
