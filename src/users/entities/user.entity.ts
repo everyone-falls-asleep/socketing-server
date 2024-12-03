@@ -1,6 +1,8 @@
 import { Expose } from 'class-transformer';
+import { IsInt } from 'class-validator';
 import { Event } from 'src/events/entities/event.entity';
-import { Reservation } from 'src/reservations/entities/reservation.entity';
+import { Order } from 'src/reservations/entities/order.entity';
+
 import {
   Entity,
   Column,
@@ -38,15 +40,19 @@ export class User {
   @Column({ nullable: false })
   salt: string;
 
-  @OneToMany(() => Reservation, (reservation) => reservation.user, {
+  @OneToMany(() => Order, (order) => order.user, {
     cascade: true,
   })
-  reservations: Reservation[];
+  orders: Order[];
 
   @OneToMany(() => Event, (event) => event.user, {
     cascade: true,
   })
   events: Event[];
+
+  @Expose()
+  @IsInt()
+  point: number;
 
   @Expose()
   @CreateDateColumn({ type: 'timestamp' })
