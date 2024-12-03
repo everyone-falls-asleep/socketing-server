@@ -7,10 +7,6 @@ import { EventDate } from 'src/events/entities/event-date.entity';
 import { Area } from 'src/events/entities/area.entity';
 import { Order } from './entities/order.entity';
 import { Payment } from './entities/payment.entity';
-import { ReservationsController } from './reservations.controller';
-import { OrdersController } from './orders.controller';
-import { ReservationsService } from './reservations.service';
-import { OrdersService } from './orders.service';
 import { PaymentsService } from './payment.service';
 import { PaymentsController } from './payment.controller';
 @Module({
@@ -26,8 +22,8 @@ import { PaymentsController } from './payment.controller';
       Payment,
     ]),
   ],
-  controllers: [ReservationsController, OrdersController, PaymentsController],
-  providers: [ReservationsService, OrdersService, PaymentsService],
-  exports: [ReservationsService, OrdersService, PaymentsService, TypeOrmModule],
+  controllers: [PaymentsController],
+  providers: [PaymentsService],
+  exports: [PaymentsService, TypeOrmModule],
 })
 export class ReservationsModule {}

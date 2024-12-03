@@ -1,5 +1,3 @@
-import { Expose } from 'class-transformer';
-import { IsInt } from 'class-validator';
 import { Event } from 'src/events/entities/event.entity';
 import { Order } from 'src/reservations/entities/order.entity';
 
@@ -15,19 +13,15 @@ import {
 
 @Entity()
 export class User {
-  @Expose()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Expose()
   @Column({ unique: true })
   nickname: string;
 
-  @Expose()
   @Column({ unique: true })
   email: string;
 
-  @Expose()
   @Column({ nullable: true })
   profileImage: string;
 
@@ -50,15 +44,12 @@ export class User {
   })
   events: Event[];
 
-  @Expose()
-  @IsInt()
+  @Column()
   point: number;
 
-  @Expose()
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  @Expose()
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
