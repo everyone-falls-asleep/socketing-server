@@ -18,13 +18,13 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { ReservationsService } from './reservations.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ReservationsService } from '../services/reservations.service';
-import { CreateReservationResponseDto } from '../dto/response/create-reservation-response.dto';
-import { CreateReservationRequestDto } from '../dto/request/create-reservation-request.dto';
+import { CreateReservationRequestDto } from './dto/create-reservation-request.dto';
 import { CommonResponse } from 'src/common/dto/common-response.dto';
-import { FindAllReservationRequestDto } from '../dto/request/find-all-reservation-request.dto';
-import { FindAllReservationResponseDto } from '../dto/response/find-all-reservation-response.dto';
+import { CreateReservationResponseDto } from './dto/create-reservation-response.dto';
+import { FindAllReservationRequestDto } from './dto/find-all-reservation-request.dto';
+import { FindAllReservationResponseDto } from './dto/find-all-reservation-response.dto';
 
 @ApiTags('Reservations')
 @Controller('reservations')

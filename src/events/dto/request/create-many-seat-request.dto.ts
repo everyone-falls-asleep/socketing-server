@@ -1,5 +1,5 @@
 import { Expose, Type } from 'class-transformer';
-import { AreaWithSeats } from '../area-with-seats.dto';
+import { AreaWithSeats } from '../detailed/area-with-seats.dto';
 import { IsArray, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 

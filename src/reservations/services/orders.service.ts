@@ -7,20 +7,14 @@ import { CreateOrderRequestDto } from '../dto/request/create-order-request.dto';
 import { User } from 'src/users/entities/user.entity';
 import { CustomException } from 'src/exceptions/custom-exception';
 import { ERROR_CODES } from 'src/contants/error-codes';
-// import { OrderStatus } from 'src/common/enum/order-status';
 import { Reservation } from '../entities/reservation.entity';
 import { EventDate } from 'src/events/entities/event-date.entity';
 import { Seat } from 'src/events/entities/seat.entity';
 import { plainToInstance } from 'class-transformer';
-import { ReservationDto } from '../dto/base/reservation.dto';
 import { CreateOrderResponseDto } from '../dto/response/create-order-response.dto';
-import { UserDto } from 'src/users/dto/base/user.dto';
-import { OrderWithDetailsDto } from '../dto/order-with-details.dto';
-import { ReservationWithSeatDetailsDto } from 'src/events/dto/reservation-with-seat-details.dto';
 import { UserWithPoint } from 'src/users/dto/user-with-point.dto';
 import { EventDto } from 'src/events/dto/basic/event.dto';
-import { SeatDto } from 'src/events/dto/basic/seat.dto';
-import { EventBasicDto } from 'src/events/dto/event-basic-dto';
+import { BasicSeatWithAreaDto } from 'src/events/dto/detailed/basic-seat-with-area.dto';
 
 @Injectable()
 export class OrdersService {
@@ -38,6 +32,21 @@ export class OrdersService {
     private readonly seatRepository: Repository<Seat>,
   ) {}
 
+  async isSeatReserved(seatId: string, eventDateId: string): Promise<boolean> {
+    const reservedReservation = await this.reservationRepository
+      .createQueryBuilder('reservation')
+      .innerJoin('reservation.eventDate', 'eventDate')
+      .leftJoin('reservation.seat', 'seat')
+      .innerJoin('seat.area', 'area') 
+      .leftJoin('reservation.order', 'order')
+      .where('eventDate.id = :eventDateId', { eventDateId })
+      .andWhere('seat.id = :seatId', { seatId })
+      .andWhere('order.deletedAt IS NULL')
+      .getOne();
+  
+    return !!reservedReservation;
+  }
+
   async createOrder(
     body: CreateOrderRequestDto,
     userId: string,
@@ -48,12 +57,15 @@ export class OrdersService {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.startTransaction();
 
+    /* error handilng code */
+    // user validation
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
       const error = ERROR_CODES.USER_NOT_FOUND;
       throw new CustomException(error.code, error.message, error.httpStatus);
     }
 
+    // eventDate validation
     const eventDate = await this.eventDateRepository.findOne({
       where: { id: eventDateId, event: { id: eventId } },
       relations: ['event'],
@@ -62,8 +74,8 @@ export class OrdersService {
       const error = ERROR_CODES.EVENT_DATE_NOT_FOUND;
       throw new CustomException(error.code, error.message, error.httpStatus);
     }
-    console.log(eventDate.event);
 
+    // seat validation
     const seats = await this.seatRepository.find({
       where: { id: In(seatIds) },
       relations: ['area'],
@@ -73,14 +85,29 @@ export class OrdersService {
       const missingSeatIds = seatIds.filter(
         (seatId) => !seats.find((seat) => seat.id === seatId),
       );
-      throw new Error(`Seats not found for IDs: ${missingSeatIds.join(', ')}`);
+      console.log(`Seats not found for IDs: ${missingSeatIds.join(', ')}`);
+      const error = ERROR_CODES.SEAT_NOT_FOUND;
+      throw new CustomException(error.code, error.message, error.httpStatus);
     }
 
-    // 이미 존재하는 주문인지 예외 코드 추가하기!
-
-    const totalAmount = seats.reduce((sum, seat) => sum + seat.area.price, 0);
+    // reservation validation 
+    const reservedSeats = await Promise.all(
+      seatIds.map(async (seatId) => {
+        const isReserved = await this.isSeatReserved(seatId, eventDateId);
+        return isReserved ? seatId : null;
+      })
+    );
+    
+    const reservedSeatIds = reservedSeats.filter((seatId) => seatId !== null);
+    
+    if (reservedSeatIds.length > 0) {
+      console.log(`Seats already reserved: ${reservedSeatIds.join(', ')}`);
+      const error = ERROR_CODES.EXISTING_ORDER;
+      throw new CustomException(error.code, error.message, error.httpStatus);
+    }
 
     try {
+      // execute SQL query
       const newReservations = seats.map((seat) => {
         const reservation = this.reservationRepository.create({
           eventDate,
@@ -91,43 +118,33 @@ export class OrdersService {
 
       const newOrder = this.orderRepository.create({
         user,
-        // orderStatus: OrderStatus.PENDING,
-        reservations: newReservations,
+        reservations: newReservations, // order-reservation insertion mapping
       });
 
       const savedOrder = await this.orderRepository.save(newOrder);
 
+      // configure response
       const userInstance = plainToInstance(UserWithPoint, user, {
         excludeExtraneousValues: true,
       });
 
-      const eventIstance = plainToInstance(EventBasicDto, eventDate.event, {
+      const eventIstance = plainToInstance(EventDto, eventDate.event, {
         excludeExtraneousValues: true,
       });
-      console.log(eventIstance);
 
-      const reservationInstances = plainToInstance(
-        ReservationWithSeatDetailsDto,
-        savedOrder.reservations.map((reservation) => ({
-          id: reservation.id,
-          seat: plainToInstance(SeatDto, reservation.seat, {
-            excludeExtraneousValues: true,
-          }),
-        })),
-        {
-          excludeExtraneousValues: true,
-        },
-      );
-      console.log(reservationInstances);
+      const seatInstances = plainToInstance(BasicSeatWithAreaDto, seats, {
+        excludeExtraneousValues: true,
+      })
+      console.log(seatInstances);
 
       const orderResponse = plainToInstance(
         CreateOrderResponseDto,
         {
           ...savedOrder,
-          totalAmount,
+          totalAmount: seats.reduce((sum, seat) => sum + seat.area.price, 0),
           user: userInstance,
           event: eventIstance,
-          reservations: reservationInstances,
+          seats: seatInstances,
         },
         {
           excludeExtraneousValues: true,

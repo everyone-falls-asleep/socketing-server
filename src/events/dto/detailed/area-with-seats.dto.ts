@@ -1,7 +1,7 @@
 import { Expose, Type } from 'class-transformer';
 import { IsArray, IsString, ValidateNested } from 'class-validator';
-import { SeatDto } from './basic/seat.dto';
-import { AreaDto } from './basic/area.dto';
+import { SeatDto } from '../basic/seat.dto';
+import { AreaDto } from '../basic/area.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { SeatWithAreaDetailsDto } from './seat-with-area-details.dto';
 

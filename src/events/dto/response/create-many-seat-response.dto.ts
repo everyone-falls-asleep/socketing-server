@@ -1,7 +1,7 @@
 import { Expose, Type } from 'class-transformer';
 import { IsArray, ValidateNested } from 'class-validator';
 import { EventDto } from '../basic/event.dto';
-import { AreaWithSeats } from '../area-with-seats.dto';
+import { AreaWithSeats } from '../detailed/area-with-seats.dto';
 
 export class CreateManySeatResponseDto {
   @Expose()
