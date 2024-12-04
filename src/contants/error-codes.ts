@@ -99,4 +99,10 @@ export const ERROR_CODES = {
     message: 'This payment is not acceptable because of insufficient balance',
     httpStatus: 409,
   },
+  INVALID_PAYMENT_REQUEST: {
+    code: 21,
+    message:
+      'This payment is not acceptable because of the invalid payment request',
+    httpStatus: 409,
+  },
 };
