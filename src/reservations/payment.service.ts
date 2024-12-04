@@ -16,6 +16,7 @@ import { PaymentDto } from './dto/base/payment.dto';
 import { OrderDto } from './dto/base/order.dto';
 import { UpdatePaymentRequestDto } from './dto/update-payment-request.dto';
 import { UpdatePaymentResponseDto } from './dto/update-payment-response.dto';
+import { EventDto } from 'src/events/dto/base/event.dto';
 
 @Injectable()
 export class PaymentsService {
@@ -176,6 +177,8 @@ export class PaymentsService {
       });
     }
 
+    const event = order.reservations[0].eventDate.event;
+
     try {
       const payment = await this.paymentRepository.findOne({
         where: { id: paymentId },
@@ -232,11 +235,16 @@ export class PaymentsService {
         excludeExtraneousValues: true,
       });
 
+      const eventInstance = plainToInstance(EventDto, event, {
+        excludeExtraneousValues: true,
+      });
+
       const paymentResponse = plainToInstance(
         UpdatePaymentResponseDto,
         {
           order: orderInstance,
           payment: paymentInstance,
+          event: eventInstance,
         },
         { excludeExtraneousValues: true },
       );
