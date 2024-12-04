@@ -133,9 +133,11 @@ export class PaymentsService {
   ): Promise<CommonResponse<UpdatePaymentResponseDto>> {
     const { orderId, paymentId, newPaymentStatus } = updatePaymentRequestDto;
 
+    /* Transaction */
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.startTransaction();
 
+    /* Error handling */
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
       const error = ERROR_CODES.USER_NOT_FOUND;
@@ -185,6 +187,21 @@ export class PaymentsService {
     try {
       payment.paymentStatus = newPaymentStatus;
       payment.paidAt = new Date();
+
+      if (payment.paymentStatus == PaymentStatus.COMPLETED) {
+        if (user.point >= payment.paymentAmount) {
+          user.point -= payment.paymentAmount;
+          const updatedUser = await this.userRepository.save(user);
+          console.log(updatedUser);
+        } else {
+          const error = ERROR_CODES.INSUFFICIENT_BALANCE;
+          throw new CustomException(
+            error.code,
+            error.message,
+            error.httpStatus,
+          );
+        }
+      }
 
       const updatedPayment = await this.paymentRepository.save(payment);
 

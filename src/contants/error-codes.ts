@@ -94,4 +94,9 @@ export const ERROR_CODES = {
     message: 'This payment is already pending or completed for the order',
     httpStatus: 409,
   },
+  INSUFFICIENT_BALANCE: {
+    code: 20,
+    message: 'This payment is not acceptable because of insufficient balance',
+    httpStatus: 409,
+  },
 };
