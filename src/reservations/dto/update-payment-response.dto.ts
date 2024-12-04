@@ -18,5 +18,5 @@ export class UpdatePaymentResponseDto {
   @Expose()
   @ValidateNested()
   @Type(() => EventDto)
-  evemt: EventDto;
+  event: EventDto;
 }
