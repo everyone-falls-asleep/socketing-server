@@ -288,22 +288,20 @@ export class OrdersController {
     status: 409,
     description: 'Order not found',
     schema: {
-      example: {
-        code: 8,
-        message: 'Order not found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 409,
-    description:
-      'This order has already been canceled. Further cancellation is not allowed.',
-    schema: {
-      example: {
-        code: 22,
-        message:
-          'This order has already been canceled. Further cancellation is not allowed.',
-      },
+      oneOf: [
+        {
+          example: {
+            code: 8,
+            message: 'Order not found',
+          },
+        },
+        {
+          example: {
+            code: 22,
+            message: 'This order has already been canceled. Further cancellation is not allowed.',
+          },
+        },
+      ],
     },
   })
   @ApiResponse({
