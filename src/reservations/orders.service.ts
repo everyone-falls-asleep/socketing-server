@@ -180,8 +180,6 @@ export class OrdersService {
       .andWhere('o.deletedAt IS NULL')
       .andWhere('o.id = :orderId', { orderId });
 
-    // console.log(queryBuilder.getQuery());
-
     const selectedOrder = await queryBuilder
       .select([
         'o.id AS orderId',
@@ -200,6 +198,7 @@ export class OrdersService {
         'event.place AS eventPlace',
         'event.cast AS eventCast',
         'event.ageLimit AS eventAgeLimit',
+        'reservation.id AS reservationId',
         'seat.id AS seatId',
         'seat.cx AS seatCx',
         'seat.cy AS seatCy',
@@ -209,50 +208,54 @@ export class OrdersService {
         'area.label AS areaLabel',
         'area.price AS areaPrice',
       ])
-      .getRawOne();
-    // console.log(selectedOrder);
+      .getRawMany();
 
     if (!selectedOrder) {
       return new CommonResponse(null);
     }
 
-    // ...selectedOrder
-    const orderData = {
-      orderId,
-      orderCreatedAt: selectedOrder.ordercreatedat,
-      orderCanceledAt: selectedOrder.ordercanceledat,
-      userId: selectedOrder.userid,
-      userNickname: selectedOrder.usernickname,
-      userEmail: selectedOrder.useremail,
-      userProfileImage: selectedOrder.userprofileimage,
-      userRole: selectedOrder.userrole,
-      eventDateId: selectedOrder.eventdateid,
-      eventDate: selectedOrder.eventdatedate,
-      eventId: selectedOrder.eventid,
-      eventTitle: selectedOrder.eventtitle,
-      eventThumbnail: selectedOrder.eventthumbnail,
-      eventPlace: selectedOrder.eventplace,
-      eventCast: selectedOrder.eventcast,
-      eventAgeLimit: selectedOrder.eventagelimit,
-      reservations: [
-        {
-          reservationId: selectedOrder.reservationid,
-          seatId: selectedOrder.seatid,
-          seatCx: selectedOrder.seatcx,
-          seatCy: selectedOrder.seatcy,
-          seatRow: selectedOrder.seatrow,
-          seatNumber: selectedOrder.seatnumber,
-          seatAreaId: selectedOrder.areaid,
-          seatAreaLabel: selectedOrder.arealabel,
-          seatAreaPrice: selectedOrder.areaprice,
-        },
-      ],
+    const commonOrder = selectedOrder[0];
+    const commonOrderData = {
+      orderId: commonOrder.orderid,
+      orderCreatedAt: commonOrder.ordercreatedat,
+      orderCanceledAt: commonOrder.ordercanceledat,
+      userId: commonOrder.userid,
+      userNickname: commonOrder.usernickname,
+      userEmail: commonOrder.useremail,
+      userProfileImage: commonOrder.userprofileimage,
+      userRole: commonOrder.userrole,
+      eventDateId: commonOrder.eventdateid,
+      eventDate: commonOrder.eventdatedate,
+      eventId: commonOrder.eventid,
+      eventTitle: commonOrder.eventtitle,
+      eventThumbnail: commonOrder.eventthumbnail,
+      eventPlace: commonOrder.eventplace,
+      eventCast: commonOrder.eventcast,
+      eventAgeLimit: commonOrder.eventagelimit,
     };
 
-    const orderInstance = plainToInstance(FindOneOrderResponseDto, orderData, {
+    const orderResponse = {
+      ...commonOrderData,
+      reservations: [],
+    };
+
+    selectedOrder.forEach((order) => {
+      orderResponse.reservations.push({
+        reservationId: order.reservationid,
+        seatId: order.seatid,
+        seatCx: order.seatcx,
+        seatCy: order.seatcy,
+        seatRow: order.seatrow,
+        seatNumber: order.seatnumber,
+        seatAreaId: order.areaid,
+        seatAreaLabel: order.arealabel,
+        seatAreaPrice: order.areaprice,
+      });
+    });
+
+    const orderInstance = plainToInstance(FindOneOrderResponseDto, orderResponse, {
       excludeExtraneousValues: true,
     });
-    //console.log(orderInstance);
 
     return new CommonResponse(orderInstance);
   }
