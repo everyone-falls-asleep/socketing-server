@@ -45,18 +45,6 @@ export class OrdersService {
     return !!reservedReservation;
   }
 
-  // async createOrder(
-  //   body: CreateOrderRequestDto,
-  //   userId: string,
-  // ): Promise<CommonResponse<any>> {
-  //   console.log('empty service invoked');
-  //   if (body) {
-  //   }
-  //   if (userId) {
-  //   }
-  //   return;
-  // }
-
   async findAll(
     findAllOrderRequestDto: FindAllOrderRequestDto,
     userId: string,
@@ -77,8 +65,6 @@ export class OrdersService {
       queryBuilder.andWhere('event.id = :eventId', { eventId });
     }
     queryBuilder.orderBy('o.createdAt', 'DESC');
-
-    // console.log(queryBuilder.getQuery());
 
     const selectedOrders = await queryBuilder
       .select([
@@ -253,9 +239,13 @@ export class OrdersService {
       });
     });
 
-    const orderInstance = plainToInstance(FindOneOrderResponseDto, orderResponse, {
-      excludeExtraneousValues: true,
-    });
+    const orderInstance = plainToInstance(
+      FindOneOrderResponseDto,
+      orderResponse,
+      {
+        excludeExtraneousValues: true,
+      },
+    );
 
     return new CommonResponse(orderInstance);
   }
@@ -266,11 +256,12 @@ export class OrdersService {
   ): Promise<CommonResponse<any>> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.startTransaction();
-    console.log('cancelOne');
     try {
       const order = await queryRunner.manager
-        .createQueryBuilder('order', 'o')
-        .select()
+        .createQueryBuilder(Order, 'o')
+        .leftJoinAndSelect('o.reservations', 'reservation')
+        .leftJoinAndSelect('reservation.seat', 'seat')
+        .leftJoinAndSelect('seat.area', 'area')
         .andWhere('o.id = :orderId', { orderId })
         .andWhere('o.userId = :userId', { userId })
         .getOne();
@@ -279,7 +270,6 @@ export class OrdersService {
         const error = ERROR_CODES.ORDER_NOT_FOUND;
         throw new CustomException(error.code, error.message, error.httpStatus);
       }
-      console.log(order);
 
       if (order.canceledAt != null) {
         const error = ERROR_CODES.ALREADY_CANCELED_ORDER;
@@ -287,17 +277,39 @@ export class OrdersService {
         throw new CustomException(error.code, error.message, error.httpStatus);
       }
 
+      // 유저 포인트 반환을 위해 주문 금액 계산
+      const refundingAmount = order.reservations.reduce((sum, reservation) => {
+        return sum + reservation.seat.area.price;
+      }, 0);
+
       const result = await queryRunner.manager
         .createQueryBuilder()
-        .update('order')
+        .update(Order)
         .set({ canceledAt: new Date() })
-        .where('id = :orderId', { orderId: order.id })
+        .where('id = :orderId', { orderId })
         .execute();
 
       if (result.affected && result.affected > 0) {
-        console.log('Update successful!');
+        console.log('Order Update successful!');
       } else {
-        console.log('No rows were updated.');
+        console.log('No Order rows were updated.');
+      }
+
+      // 유저 포인트 반환
+      const updateUserResult = await queryRunner.manager
+        .createQueryBuilder()
+        .update('user')
+        .set({
+          point: () => 'point + :refundingAmount',
+        })
+        .where('id = :userId', { userId })
+        .setParameter('refundingAmount', refundingAmount)
+        .execute();
+
+      if (updateUserResult.affected && updateUserResult.affected > 0) {
+        console.log('User Update successful!');
+      } else {
+        console.log('No User rows were updated.');
       }
 
       await queryRunner.commitTransaction();
