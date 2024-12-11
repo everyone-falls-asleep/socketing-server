@@ -250,7 +250,7 @@ export class OrdersService {
         excludeExtraneousValues: true,
       },
     );
-    console.log(orderInstance);
+    // console.log(orderInstance);
 
     return new CommonResponse(orderInstance);
   }
@@ -270,6 +270,7 @@ export class OrdersService {
         .andWhere('o.id = :orderId', { orderId })
         .andWhere('o.userId = :userId', { userId })
         .getOne();
+      console.log(order);
 
       if (!order) {
         const error = ERROR_CODES.ORDER_NOT_FOUND;
@@ -287,17 +288,36 @@ export class OrdersService {
         return sum + reservation.seat.area.price;
       }, 0);
 
-      const result = await queryRunner.manager
+      const orderResult = await queryRunner.manager
         .createQueryBuilder()
         .update(Order)
         .set({ canceledAt: new Date() })
         .where('id = :orderId', { orderId })
         .execute();
 
-      if (result.affected && result.affected > 0) {
+      if (orderResult.affected && orderResult.affected > 0) {
         console.log('Order Update successful!');
       } else {
         console.log('No Order rows were updated.');
+      }
+
+      const reservations = order.reservations;
+
+      for (const r of reservations) {
+        const reservationId = r.id;
+
+        const reservationResult = await queryRunner.manager
+          .createQueryBuilder()
+          .update(Reservation)
+          .set({ canceledAt: new Date() })
+          .where('id = :reservationId', { reservationId })
+          .execute();
+
+        if (reservationResult.affected && reservationResult.affected > 0) {
+          console.log('Order Update successful!');
+        } else {
+          console.log('No Order rows were updated.');
+        }
       }
 
       // 유저 포인트 반환

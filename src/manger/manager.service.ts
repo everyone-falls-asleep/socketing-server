@@ -122,6 +122,8 @@ export class ManagersService {
         'eventDates',
         'eventDates.deletedAt IS NULL',
       )
+      .andWhere('user.id = :userId', { userId })
+      .orderBy('event.createdAt', 'DESC')
       .select([
         'event.id',
         'event.title',
@@ -142,7 +144,6 @@ export class ManagersService {
         'user.profileImage',
         'user.role',
       ])
-      .andWhere('event.user = :userId', { userId })
       .getMany();
 
     return new CommonResponse(events);
