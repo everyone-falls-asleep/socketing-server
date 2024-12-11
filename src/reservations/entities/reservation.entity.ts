@@ -14,7 +14,7 @@ import {
 import { Order } from './order.entity';
 
 @Entity()
-@Index('unique_eventDate_seat_canceledAt_null', ['seat', 'eventDate'], {
+@Index('unique_eventdate_seat_canceledat_null', ['seat', 'eventDate'], {
   where: '"canceledAt" IS NULL',
 })
 export class Reservation {
