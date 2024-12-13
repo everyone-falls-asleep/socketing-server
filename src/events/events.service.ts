@@ -333,12 +333,7 @@ export class EventsService {
       throw new CustomException(error.code, error.message, error.httpStatus);
     }
 
-    console.log(createManySeatRequestDto);
-
     const { areas } = createManySeatRequestDto;
-    console.log(areas);
-    // console.log('Raw areas data:', JSON.stringify(areas, null, 2));
-
     try {
       const savedAreas = await Promise.all(
         areas.map(async (area) => {
